@@ -7,15 +7,6 @@
 ---
 # Project Ideas 👻
 
-I'm thinking **2-3 sentences per project** - enough to get started, not overwhelming. Format like:
-
-**Project Name**
-Short description of what to build. Key tech/approach to use. One specific implementation tip or gotcha.
-
-Let me write them out:
-
----
-
 ## 🔰 Beginner Projects
 
 ### Simple Port Scanner
