@@ -2,10 +2,11 @@
 
 
 ---
-## <img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif?cid=ecf05e47a0n3gi1bfqntqmob8g9aid1oyj2wr3ds3mg700bl&rid=giphy.gif" width ="30">   **Certification Roadmap by Role**  <img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif?cid=ecf05e47a0n3gi1bfqntqmob8g9aid1oyj2wr3ds3mg700bl&rid=giphy.gif" width ="30">
-[![Role](https://skillicons.dev/icons?i=linux)](https://skillicons.dev)
+## <img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif?cid=ecf05e47a0n3gi1bfqntqmob8g9aid1oyj2wr3ds3mg700bl&rid=giphy.gif" width ="30">   **Certification Roadmap by Role**   <img src="https://media2.giphy.com/media/QssGEmpkyEOhBCb7e1/giphy.gif?cid=ecf05e47a0n3gi1bfqntqmob8g9aid1oyj2wr3ds3mg700bl&rid=giphy.gif" width ="30">
+
 
 ### 1. SOC Analyst
+[![Role](https://skillicons.dev/icons?i=debian)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -19,6 +20,7 @@
 ---
 
 ### 2. Penetration Tester
+[![Role](https://skillicons.dev/icons?i=kali)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -32,6 +34,7 @@
 ---
 
 ### 3. Security Engineer
+[![Role](https://skillicons.dev/icons?i=linux)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -44,6 +47,7 @@
 ---
 
 ### 4. Incident Responder
+[![Role](https://skillicons.dev/icons?i=redhat)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -56,6 +60,7 @@
 ---
 
 ### 5. Security Architect
+[![Role](https://skillicons.dev/icons?i=laravel)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -69,6 +74,7 @@
 ---
 
 ### 6. Cloud Security Engineer
+[![Role](https://skillicons.dev/icons?i=aws)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -83,6 +89,7 @@
 ---
 
 ### 7. GRC Analyst/Consultant
+[![Role](https://skillicons.dev/icons?i=notion)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -95,6 +102,7 @@
 ---
 
 ### 8. Threat Intelligence Analyst
+[![Role](https://skillicons.dev/icons?i=bash)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -108,6 +116,7 @@
 ---
 
 ### 9. Application Security
+[![Role](https://skillicons.dev/icons?i=flask)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -121,6 +130,7 @@
 ---
 
 ### 10. Network Engineer (Security-Focused)
+[![Role](https://skillicons.dev/icons?i=cloudfare)](https://skillicons.dev)
 
 | Level | Certification | Organization | Link |
 |-------|--------------|--------------|------|
@@ -131,7 +141,3 @@
 | **Architect/Management** | **CISSP** | (ISC)² | [Website](https://www.isc2.org/Certifications/CISSP) |
 
 ---
-
-**Does this layout look good?** Clean tables, clickable links, organized by role. 
-
-Now we can add the project ideas section below this. Want to knock out the 25 project ideas next?
