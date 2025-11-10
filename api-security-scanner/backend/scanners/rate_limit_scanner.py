@@ -110,7 +110,8 @@ class RateLimitScanner(BaseScanner):
         Returns:
             dict[str, Any]: Rate limiting detection results
         """
-        rate_limit_patterns = RateLimitBypassPayloads.get_header_patterns()
+        rate_limit_patterns = RateLimitBypassPayloads.get_header_patterns(
+        )
 
         results = {
             "rate_limit_detected": False,

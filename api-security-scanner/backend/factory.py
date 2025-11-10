@@ -7,7 +7,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from slowapi import (
-    Limiter, 
+    Limiter,
     _rate_limit_exceeded_handler,
 )
 from slowapi.errors import RateLimitExceeded
@@ -22,32 +22,34 @@ def create_app() -> FastAPI:
     """
     Application factory function
     """
-    Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind = engine)
 
     app = FastAPI(
-        title=settings.APP_NAME,
-        version=settings.VERSION,
-        docs_url="/api/docs",
-        redoc_url="/api/redoc",
-        debug=settings.DEBUG,
+        title = settings.APP_NAME,
+        version = settings.VERSION,
+        docs_url = "/api/docs",
+        redoc_url = "/api/redoc",
+        debug = settings.DEBUG,
     )
 
-    limiter = Limiter(key_func=get_remote_address)
+    limiter = Limiter(key_func = get_remote_address)
     app.state.limiter = limiter
-    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_exception_handler(
+        RateLimitExceeded,
+        _rate_limit_exceeded_handler
+    )
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.cors_origins_list,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
+        allow_origins = settings.cors_origins_list,
+        allow_credentials = True,
+        allow_methods = ["*"],
+        allow_headers = ["*"],
     )
 
     _register_routes(app)
 
     return app
-
 
 
 def _register_routes(app: FastAPI) -> None:
@@ -74,4 +76,3 @@ def _register_routes(app: FastAPI) -> None:
 
     app.include_router(auth_router)
     app.include_router(scans_router)
-

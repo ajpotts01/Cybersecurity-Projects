@@ -277,9 +277,12 @@ class RateLimitBypassPayloads:
     """
 
     HEADER_PATTERNS = {
-        "limit": r"x-ratelimit-limit|x-rate-limit-limit|ratelimit-limit",
-        "remaining": r"x-ratelimit-remaining|x-rate-limit-remaining|ratelimit-remaining",
-        "reset": r"x-ratelimit-reset|x-rate-limit-reset|ratelimit-reset",
+        "limit":
+        r"x-ratelimit-limit|x-rate-limit-limit|ratelimit-limit",
+        "remaining":
+        r"x-ratelimit-remaining|x-rate-limit-remaining|ratelimit-remaining",
+        "reset":
+        r"x-ratelimit-reset|x-rate-limit-reset|ratelimit-reset",
         "retry_after": r"retry-after",
     }
 

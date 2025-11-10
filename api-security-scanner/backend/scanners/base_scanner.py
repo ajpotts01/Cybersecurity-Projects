@@ -87,7 +87,8 @@ class BaseScanner(ABC):
             jitter_ms = settings.DEFAULT_JITTER_MS
 
         required_delay = 1.0 / (
-            self.max_requests / settings.SCANNER_RATE_LIMIT_WINDOW_SECONDS
+            self.max_requests /
+            settings.SCANNER_RATE_LIMIT_WINDOW_SECONDS
         )
         jitter = random.uniform(0, jitter_ms / 1000.0)
 
@@ -138,7 +139,11 @@ class BaseScanner(ABC):
             try:
                 start_time = time.time()
                 response = self.session.request(method, url, **kwargs)
-                setattr(response, "request_time", time.time() - start_time)
+                setattr(
+                    response,
+                    "request_time",
+                    time.time() - start_time
+                )
 
                 self.request_count += 1
 
