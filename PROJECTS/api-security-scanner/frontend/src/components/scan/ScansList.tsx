@@ -65,7 +65,10 @@ export const ScansList = (): React.ReactElement => {
             const scanDate = formatDate(scan.scan_date);
 
             return (
-              <div key={scan.id} className="scans-list__row">
+              <div
+                key={scan.id}
+                className="scans-list__row"
+              >
                 <div className="scans-list__cell">
                   <span className="scans-list__url">{scan.target_url}</span>
                 </div>

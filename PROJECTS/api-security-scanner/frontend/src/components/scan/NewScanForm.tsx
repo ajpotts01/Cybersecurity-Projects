@@ -138,68 +138,82 @@ export const NewScanForm = (): React.ReactElement => {
   return (
     <>
       {isPending ? <LoadingOverlay tests={selectedTests} /> : null}
-      <form className="scan-form" onSubmit={handleSubmit}>
-      <div className="scan-form__fields">
-        <Input
-          label="Target URL"
-          type="url"
-          value={targetUrl}
-          onChange={(e) => handleTargetUrlChange(e.target.value)}
-          error={errors.targetUrl}
-          placeholder="https://api.example.com/endpoint"
-          required
-        />
+      <form
+        className="scan-form"
+        onSubmit={handleSubmit}
+      >
+        <div className="scan-form__fields">
+          <Input
+            label="Target URL"
+            type="url"
+            value={targetUrl}
+            onChange={(e) => handleTargetUrlChange(e.target.value)}
+            error={errors.targetUrl}
+            placeholder="https://api.example.com/endpoint"
+            required
+          />
 
-        <Input
-          label="Auth Token (Optional)"
-          type="text"
-          value={authToken}
-          onChange={(e) => handleAuthTokenChange(e.target.value)}
-          error={errors.authToken}
-          placeholder="Bearer token or API key"
-        />
+          <Input
+            label="Auth Token (Optional)"
+            type="text"
+            value={authToken}
+            onChange={(e) => handleAuthTokenChange(e.target.value)}
+            error={errors.authToken}
+            placeholder="Bearer token or API key"
+          />
 
-        <div className="scan-form__field">
-          <label className="scan-form__label">
-            Select Tests
-            {errors.testsToRun !== null && errors.testsToRun !== undefined ? (
-              <span className="scan-form__error" role="alert">
-                {errors.testsToRun}
-              </span>
-            ) : null}
-          </label>
-          <div className="scan-form__checkboxes">
-            {Object.values(SCAN_TEST_TYPES).map((test) => (
-              <label key={test} className="scan-form__checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={selectedTests.includes(test)}
-                  onChange={() => handleTestToggle(test)}
-                  className="scan-form__checkbox"
-                />
-                <span>{TEST_TYPE_LABELS[test]}</span>
-              </label>
-            ))}
+          <div className="scan-form__field">
+            <label className="scan-form__label">
+              Select Tests
+              {errors.testsToRun !== null &&
+              errors.testsToRun !== undefined ? (
+                <span
+                  className="scan-form__error"
+                  role="alert"
+                >
+                  {errors.testsToRun}
+                </span>
+              ) : null}
+            </label>
+            <div className="scan-form__checkboxes">
+              {Object.values(SCAN_TEST_TYPES).map((test) => (
+                <label
+                  key={test}
+                  className="scan-form__checkbox-label"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedTests.includes(test)}
+                    onChange={() => handleTestToggle(test)}
+                    className="scan-form__checkbox"
+                  />
+                  <span>{TEST_TYPE_LABELS[test]}</span>
+                </label>
+              ))}
+            </div>
           </div>
+
+          <Input
+            label="Max Requests"
+            type="number"
+            value={maxRequests}
+            onChange={(e) => handleMaxRequestsChange(e.target.value)}
+            error={errors.maxRequests}
+            placeholder="50"
+            min="1"
+            max="50"
+            required
+          />
         </div>
 
-        <Input
-          label="Max Requests"
-          type="number"
-          value={maxRequests}
-          onChange={(e) => handleMaxRequestsChange(e.target.value)}
-          error={errors.maxRequests}
-          placeholder="50"
-          min="1"
-          max="50"
-          required
-        />
-      </div>
-
-      <Button type="submit" isLoading={isPending} disabled={isPending}>
-        {isPending ? 'Running Scan...' : 'Start Scan'}
-      </Button>
-    </form>
+        <Button
+          type="submit"
+          isLoading={isPending}
+          disabled={isPending}
+        >
+          {isPending ? 'Running Scan...' : 'Start Scan'}
+        </Button>
+      </form>
     </>
   );
 };

@@ -41,9 +41,18 @@ interface UIState {
 }
 
 interface UIActions {
-  setLoginFormField: (field: keyof Omit<LoginFormState, 'expiresAt'>, value: string) => void;
-  setRegisterFormField: (field: keyof Omit<RegisterFormState, 'expiresAt'>, value: string) => void;
-  setScanFormField: (field: keyof Omit<ScanFormState, 'expiresAt'>, value: string | ScanTestType[]) => void;
+  setLoginFormField: (
+    field: keyof Omit<LoginFormState, 'expiresAt'>,
+    value: string,
+  ) => void;
+  setRegisterFormField: (
+    field: keyof Omit<RegisterFormState, 'expiresAt'>,
+    value: string,
+  ) => void;
+  setScanFormField: (
+    field: keyof Omit<ScanFormState, 'expiresAt'>,
+    value: string | ScanTestType[],
+  ) => void;
   toggleTestExpanded: (testId: number) => void;
   clearLoginForm: () => void;
   clearRegisterForm: () => void;
@@ -113,7 +122,8 @@ export const useUIStore = create<UIStore>()(
 
       toggleTestExpanded: (testId): void => {
         set((state) => {
-          const currentValue = state.testResults.expandedTests[testId] ?? false;
+          const currentValue =
+            state.testResults.expandedTests[testId] ?? false;
           state.testResults.expandedTests[testId] = !currentValue;
         });
       },

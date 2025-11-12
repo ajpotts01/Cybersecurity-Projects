@@ -13,12 +13,16 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, id, ...props }, ref) => {
-    const inputId = id ?? `input-${label.toLowerCase().replace(/\s+/g, '-')}`;
+    const inputId =
+      id ?? `input-${label.toLowerCase().replace(/\s+/g, '-')}`;
     const errorId = `${inputId}-error`;
 
     return (
       <div className="input-wrapper">
-        <label htmlFor={inputId} className="input-label">
+        <label
+          htmlFor={inputId}
+          className="input-label"
+        >
           {label}
         </label>
         <input
@@ -26,11 +30,17 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           className={`input ${error !== null && error !== undefined ? 'input--error' : ''}`}
           aria-invalid={error !== null && error !== undefined ? true : false}
-          aria-describedby={error !== null && error !== undefined ? errorId : undefined}
+          aria-describedby={
+            error !== null && error !== undefined ? errorId : undefined
+          }
           {...props}
         />
         {error !== null && error !== undefined ? (
-          <p id={errorId} className="input-error" role="alert">
+          <p
+            id={errorId}
+            className="input-error"
+            role="alert"
+          >
             {error}
           </p>
         ) : null}

@@ -8,7 +8,11 @@ import { toast } from 'sonner';
 
 export const createApiErrorHandler = (context: string) => {
   return (error: unknown): void => {
-    if (isAxiosError(error) && error.response?.data !== null && error.response?.data !== undefined) {
+    if (
+      isAxiosError(error) &&
+      error.response?.data !== null &&
+      error.response?.data !== undefined
+    ) {
       const errorData: unknown = error.response.data;
 
       if (
@@ -24,7 +28,9 @@ export const createApiErrorHandler = (context: string) => {
     }
 
     const fallbackMessage =
-      error instanceof Error ? error.message : `Operation failed: ${context}`;
+      error instanceof Error
+        ? error.message
+        : `Operation failed: ${context}`;
     toast.error(fallbackMessage);
   };
 };

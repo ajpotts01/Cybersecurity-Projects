@@ -33,7 +33,10 @@ export const DashboardPage = (): React.ReactElement => {
             </div>
             <div className="dashboard__header-actions">
               <span className="dashboard__user-email">{user?.email}</span>
-              <Button onClick={handleLogout} variant="secondary">
+              <Button
+                onClick={handleLogout}
+                variant="secondary"
+              >
                 Logout
               </Button>
             </div>
