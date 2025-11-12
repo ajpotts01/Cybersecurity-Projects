@@ -167,11 +167,9 @@ class TestResultRepository:
         Returns:
             int: Number of test results deleted
         """
-        count = (
-            db.query(TestResult).filter(
-                TestResult.scan_id == scan_id
-            ).delete()
-        )
+        count = db.query(TestResult).filter(
+            TestResult.scan_id == scan_id
+        ).delete()
         if commit:
             db.commit()
         return count

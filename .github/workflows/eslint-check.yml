@@ -4,11 +4,11 @@ on:
   pull_request:
     branches: [ '*' ]
     paths:
-      - 'frontend/**/*.ts'
-      - 'frontend/**/*.tsx'
-      - 'frontend/eslint.config.js'
-      - 'frontend/tsconfig*.json'
-      - 'frontend/package.json'
+      - 'PROJECTS/api-security-scanner/frontend/**/*.ts'
+      - 'PROJECTS/api-security-scanner/frontend/**/*.tsx'
+      - 'PROJECTS/api-security-scanner/frontend/eslint.config.js'
+      - 'PROJECTS/api-security-scanner/frontend/tsconfig*.json'
+      - 'PROJECTS/api-security-scanner/frontend/package.json'
       - '.github/workflows/eslint-check.yml'
 
 jobs:
@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: frontend
+        working-directory: PROJECTS/api-security-scanner/frontend
 
     steps:
     - name: Checkout code
@@ -33,7 +33,7 @@ jobs:
       with:
         node-version: '20'
         cache: 'npm'
-        cache-dependency-path: frontend/package-lock.json
+        cache-dependency-path: PROJECTS/api-security-scanner/frontend/package-lock.json
 
     - name: Install dependencies
       run: npm install
@@ -106,7 +106,7 @@ jobs:
       uses: peter-evans/create-or-update-comment@v4
       with:
         issue-number: ${{ github.event.pull_request.number }}
-        body-path: frontend/eslint-report.md
+        body-path: PROJECTS/api-security-scanner/frontend/eslint-report.md
         edit-mode: replace
 
     - name: Exit with proper code

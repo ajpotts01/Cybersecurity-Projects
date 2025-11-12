@@ -16,9 +16,7 @@ class Settings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_file = "../.env",
-        env_file_encoding = "utf-8",
-        case_sensitive = True
+        env_file="../.env", env_file_encoding="utf-8", case_sensitive=True
     )
 
     # Application metadata
@@ -86,9 +84,7 @@ class Settings(BaseSettings):
         """
         Convert comma separated CORS origins string to list
         """
-        return [
-            origin.strip() for origin in self.CORS_ORIGINS.split(",")
-        ]
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",")]
 
 
 @lru_cache

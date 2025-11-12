@@ -3,10 +3,7 @@
 // ©AngelaMos | 2025
 // ===========================
 
-import {
-  useMutation,
-  type UseMutationResult,
-} from '@tanstack/react-query';
+import { useMutation, type UseMutationResult } from '@tanstack/react-query';
 import { isAxiosError, type AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
@@ -29,12 +26,23 @@ import { useAuthStore } from '@/store/authStore';
 
 const createAuthErrorHandler = (context: string) => {
   return (error: unknown): void => {
-    if (isAxiosError(error) && error.response?.data !== null && error.response?.data !== undefined) {
+    if (
+      isAxiosError(error) &&
+      error.response?.data !== null &&
+      error.response?.data !== undefined
+    ) {
       const errorData: unknown = error.response.data;
 
-      if (typeof errorData === 'object' && errorData !== null && 'detail' in errorData) {
+      if (
+        typeof errorData === 'object' &&
+        errorData !== null &&
+        'detail' in errorData
+      ) {
         const apiError = errorData as { detail: unknown };
-        if (typeof apiError.detail === 'string' && apiError.detail.length > 0) {
+        if (
+          typeof apiError.detail === 'string' &&
+          apiError.detail.length > 0
+        ) {
           toast.error(apiError.detail);
           return;
         }

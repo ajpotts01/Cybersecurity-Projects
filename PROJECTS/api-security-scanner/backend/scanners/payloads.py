@@ -8,6 +8,7 @@ class SQLiPayloads:
     """
     SQL Injection test payloads covering various database types and techniques
     """
+
     ERROR_SIGNATURES = {
         "mysql": [
             "sql syntax",
@@ -221,6 +222,7 @@ class IDORPayloads:
     """
     Insecure Direct Object Reference (IDOR) test patterns
     """
+
     NUMERIC_ID_MANIPULATIONS = [
         0,
         -1,
@@ -273,6 +275,7 @@ class RateLimitBypassPayloads:
     """
     Rate limiting bypass techniques and patterns
     """
+
     HEADER_PATTERNS = {
         "limit":
         r"x-ratelimit-limit|x-rate-limit-limit|ratelimit-limit",
@@ -413,9 +416,9 @@ class XSSPayloads:
 
     ATTRIBUTE_BREAKING = [
         "' onmouseover='alert(\"XSS\")'",
-        "\" onmouseover=\"alert('XSS')\"",
+        '" onmouseover="alert(\'XSS\')"',
         "' onclick='alert(\"XSS\")' '",
-        "\" autofocus onfocus=\"alert('XSS')\"",
+        '" autofocus onfocus="alert(\'XSS\')"',
         "'/><script>alert('XSS')</script>",
         "\"/><script>alert('XSS')</script>",
     ]
@@ -427,7 +430,7 @@ class XSSPayloads:
         "<script>alert('XSS')<!--",
         "<<script>alert('XSS')</script>",
         "<script\x20type='text/javascript'>alert('XSS')</script>",
-        "<script\x0D\x0A>alert('XSS')</script>",
+        "<script\x0d\x0a>alert('XSS')</script>",
     ]
 
     POLYGLOT_XSS = [

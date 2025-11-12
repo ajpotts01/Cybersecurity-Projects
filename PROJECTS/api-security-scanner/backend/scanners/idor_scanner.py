@@ -135,7 +135,7 @@ class IDORScanner(BaseScanner):
 
             response_text = response.text
 
-            uuid_pattern = r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+            uuid_pattern = r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
             uuids = re.findall(
                 uuid_pattern,
                 response_text,

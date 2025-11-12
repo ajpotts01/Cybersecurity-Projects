@@ -273,10 +273,7 @@ class SQLiScanner(BaseScanner):
                     avg_delay = statistics.mean(delay_times)
 
                     if avg_delay >= expected_delay_time - 1:
-                        confidence = (
-                            "HIGH" if avg_delay >= expected_delay_time
-                            else "MEDIUM"
-                        )
+                        confidence = "HIGH" if avg_delay >= expected_delay_time else "MEDIUM"
 
                         return {
                             "vulnerable":

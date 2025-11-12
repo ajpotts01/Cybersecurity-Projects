@@ -1,6 +1,6 @@
 """
 ⒸCertGames.com | 2025
-ⒸAngelaMos | CarterPerez-dev 
+ⒸAngelaMos | CarterPerez-dev
 ----
 API Security Scanner FastAPI entry point
 """

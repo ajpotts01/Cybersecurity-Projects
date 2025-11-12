@@ -14,11 +14,7 @@ import type {
   ScanStatus,
   Severity,
 } from './scan.types';
-import {
-  SCAN_TEST_TYPES,
-  SCAN_STATUS,
-  SEVERITY,
-} from '@/config/constants';
+import { SCAN_TEST_TYPES, SCAN_STATUS, SEVERITY } from '@/config/constants';
 
 export const isValidLoginResponse = (
   data: unknown,
@@ -89,7 +85,9 @@ const isValidTestResult = (data: unknown): data is TestResult => {
     typeof obj.evidence_json === 'object' &&
     obj.evidence_json !== null &&
     Array.isArray(obj.recommendations_json) &&
-    obj.recommendations_json.every((rec: unknown) => typeof rec === 'string') &&
+    obj.recommendations_json.every(
+      (rec: unknown) => typeof rec === 'string',
+    ) &&
     typeof obj.created_at === 'string'
   );
 };

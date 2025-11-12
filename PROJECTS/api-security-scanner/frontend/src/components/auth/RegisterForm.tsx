@@ -15,7 +15,9 @@ import './AuthForm.css';
 
 export const RegisterForm = (): React.ReactElement => {
   const registerFormState = useUIStore((state) => state.registerForm);
-  const setRegisterFormField = useUIStore((state) => state.setRegisterFormField);
+  const setRegisterFormField = useUIStore(
+    (state) => state.setRegisterFormField,
+  );
   const clearRegisterForm = useUIStore((state) => state.clearRegisterForm);
   const clearExpiredData = useUIStore((state) => state.clearExpiredData);
 
@@ -61,7 +63,10 @@ export const RegisterForm = (): React.ReactElement => {
   const handleConfirmPasswordChange = (value: string): void => {
     setConfirmPassword(value);
     setRegisterFormField('confirmPassword', value);
-    if (errors.confirmPassword !== null && errors.confirmPassword !== undefined) {
+    if (
+      errors.confirmPassword !== null &&
+      errors.confirmPassword !== undefined
+    ) {
       validateField('confirmPassword', value);
     }
   };
@@ -77,7 +82,9 @@ export const RegisterForm = (): React.ReactElement => {
     });
 
     if (!result.success) {
-      const fieldError = result.error.issues.find((err) => err.path[0] === field);
+      const fieldError = result.error.issues.find(
+        (err) => err.path[0] === field,
+      );
       if (fieldError !== null && fieldError !== undefined) {
         setErrors((prev) => ({ ...prev, [field]: fieldError.message }));
       } else {
@@ -94,7 +101,9 @@ export const RegisterForm = (): React.ReactElement => {
     }
   };
 
-  const handleBlur = (field: 'email' | 'password' | 'confirmPassword'): void => {
+  const handleBlur = (
+    field: 'email' | 'password' | 'confirmPassword',
+  ): void => {
     let value: string;
     if (field === 'email') {
       value = email;
@@ -153,10 +162,15 @@ export const RegisterForm = (): React.ReactElement => {
   };
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
+    <form
+      className="auth-form"
+      onSubmit={handleSubmit}
+    >
       <div className="auth-form__header">
         <h1 className="auth-form__title">Create Account</h1>
-        <p className="auth-form__subtitle">Get started with API Security Scanner</p>
+        <p className="auth-form__subtitle">
+          Get started with API Security Scanner
+        </p>
       </div>
 
       <div className="auth-form__fields">
@@ -198,18 +212,29 @@ export const RegisterForm = (): React.ReactElement => {
       </div>
 
       {error !== null && error !== undefined && isAxiosError(error) ? (
-        <div className="auth-form__error-message" role="alert">
-          {(error.response?.data as { detail?: string } | undefined)?.detail ?? 'Registration failed. Please try again.'}
+        <div
+          className="auth-form__error-message"
+          role="alert"
+        >
+          {(error.response?.data as { detail?: string } | undefined)
+            ?.detail ?? 'Registration failed. Please try again.'}
         </div>
       ) : null}
 
-      <Button type="submit" isLoading={isPending} disabled={isPending}>
+      <Button
+        type="submit"
+        isLoading={isPending}
+        disabled={isPending}
+      >
         Create Account
       </Button>
 
       <p className="auth-form__link">
         Already have an account?{' '}
-        <Link to="/login" className="auth-form__link-text">
+        <Link
+          to="/login"
+          className="auth-form__link-text"
+        >
           Sign in
         </Link>
       </p>

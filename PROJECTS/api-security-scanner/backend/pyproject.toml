@@ -56,19 +56,19 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 py-modules = [
-    "main", 
-    "config", 
+    "main",
+    "config",
     "factory"
 ]
 
 [tool.setuptools.packages.find]
 include = [
     "core",
-    "routes",    
-    "models",    
-    "schemas", 
-    "services", 
-    "scanners",   
+    "routes",
+    "models",
+    "schemas",
+    "services",
+    "scanners",
     "repositories"
 ]
 
@@ -190,6 +190,7 @@ disable_error_code = [
     "call-arg",
     "dict-item",
     "abstract",
+    "import-untyped",
 ]
 
 
@@ -203,21 +204,21 @@ load-plugins = [
 persistent = true
 suggestion-mode = true
 init-hook = "import sys; import os; sys.path.insert(0, os.getcwd())"
-ignore = [ 
-    "venv", 
-    ".venv", 
-    "__pycache__",  
-    "build", 
-    "dist", 
+ignore = [
+    "venv",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
     ".git",
-    ".pytest_cache", 
-    ".mypy_cache", 
-    ".ruff_cache", 
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
 ]
-ignore-paths = [ 
-    "^venv/.*", 
-    "^.venv/.*", 
-    "^build/.*", 
+ignore-paths = [
+    "^venv/.*",
+    "^.venv/.*",
+    "^build/.*",
     "^dist/.*",
 ]
 [tool.pylint.type-check]
@@ -268,7 +269,7 @@ max-statements = 40
 
 [tool.bandit]
 exclude_dirs = [
-    ".venv", 
+    ".venv",
     "venv",
 ]
 skips = ["B104"]

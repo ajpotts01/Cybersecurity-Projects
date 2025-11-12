@@ -21,9 +21,10 @@ export const LoginForm = (): React.ReactElement => {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-    {},
-  );
+  const [errors, setErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
 
   const { mutate: login, isPending, error } = useLogin();
 
@@ -49,14 +50,19 @@ export const LoginForm = (): React.ReactElement => {
     }
   };
 
-  const validateField = (field: 'email' | 'password', value: string): void => {
+  const validateField = (
+    field: 'email' | 'password',
+    value: string,
+  ): void => {
     const result = loginSchema.safeParse({
       email: field === 'email' ? value : email,
       password: field === 'password' ? value : password,
     });
 
     if (!result.success) {
-      const fieldError = result.error.issues.find((err) => err.path[0] === field);
+      const fieldError = result.error.issues.find(
+        (err) => err.path[0] === field,
+      );
       if (fieldError !== null && fieldError !== undefined) {
         setErrors((prev) => ({ ...prev, [field]: fieldError.message }));
       } else {
@@ -120,7 +126,10 @@ export const LoginForm = (): React.ReactElement => {
   };
 
   return (
-    <form className="auth-form" onSubmit={handleSubmit}>
+    <form
+      className="auth-form"
+      onSubmit={handleSubmit}
+    >
       <div className="auth-form__header">
         <h1 className="auth-form__title">Welcome Back</h1>
         <p className="auth-form__subtitle">Sign in to your account</p>
@@ -153,18 +162,29 @@ export const LoginForm = (): React.ReactElement => {
       </div>
 
       {error !== null && error !== undefined && isAxiosError(error) ? (
-        <div className="auth-form__error-message" role="alert">
-          {(error.response?.data as { detail?: string } | undefined)?.detail ?? 'Login failed. Please try again.'}
+        <div
+          className="auth-form__error-message"
+          role="alert"
+        >
+          {(error.response?.data as { detail?: string } | undefined)
+            ?.detail ?? 'Login failed. Please try again.'}
         </div>
       ) : null}
 
-      <Button type="submit" isLoading={isPending} disabled={isPending}>
+      <Button
+        type="submit"
+        isLoading={isPending}
+        disabled={isPending}
+      >
         Sign In
       </Button>
 
       <p className="auth-form__link">
         Don&apos;t have an account?{' '}
-        <Link to="/register" className="auth-form__link-text">
+        <Link
+          to="/register"
+          className="auth-form__link-text"
+        >
           Sign up
         </Link>
       </p>

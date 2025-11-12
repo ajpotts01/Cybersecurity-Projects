@@ -22,6 +22,7 @@ class ScanRequest(BaseModel):
     """
     Schema for creating a new security scan
     """
+
     target_url: HttpUrl = Field(max_length = settings.URL_MAX_LENGTH)
     auth_token: str | None = None
     tests_to_run: list[TestType] = Field(min_length = 1)
@@ -36,6 +37,7 @@ class ScanResponse(BaseModel):
     """
     Schema for scan data in API responses
     """
+
     model_config = ConfigDict(from_attributes = True)
 
     id: int

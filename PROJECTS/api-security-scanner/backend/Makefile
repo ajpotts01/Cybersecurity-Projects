@@ -41,17 +41,17 @@ help:
 	@echo "\033[1;4;91mSyntax Checking (Ruff):\033[0m"
 	@echo "  \033[92mmake \033[36mqa\033[0m           \033[94m- Check all code for syntax issues\033[0m"
 	@echo "\033[1;4;91mSyntax Fixing (Ruff):\033[0m"
-	@echo "  \033[92mmake \033[36mqa\033[0m           \033[94m- Fix all code of syntax issues\033[0m"	
+	@echo "  \033[92mmake \033[36mqa\033[0m           \033[94m- Fix all code of syntax issues\033[0m"
 	@echo ""
 	@echo "\033[1;4;94mType Checking (mypy):\033[0m"
 	@echo "  \033[92mmake \033[36mqa\033[0m            \033[94m- Type check all code\033[0m"
 	@echo "\033[1;4;94mFormat:\033[0m"
-	@echo "  \033[92mmake \033[36mqa\033[0m            \033[94m- Format code\033[0m"	
+	@echo "  \033[92mmake \033[36mqa\033[0m            \033[94m- Format code\033[0m"
 	@echo ""
 	@echo "\033[1;4;92mUtilities:\033[0m"
 	@echo "  \033[92mmake \033[36mclean\033[0m           \033[94m- Remove all cache files\033[0m"
 	@echo "  \033[92mmake \033[36mtree\033[0m            \033[94m- Display the file tree\033[0m"
-	@echo "  \033[92mmake \033[36mTODO\033[0m           \033[94m- Find All TODO \033[0m"	
+	@echo "  \033[92mmake \033[36mTODO\033[0m           \033[94m- Find All TODO \033[0m"
 	@echo ""
 	@echo "\033[1;93mCurrent default domain: \033[1;5;95m$(DOMAIN)\033[0m"
 	@echo ""
@@ -59,7 +59,7 @@ help:
 	@echo "  \033[91maccount\033[0m, \033[92mcommunity\033[0m, \033[93mcontent\033[0m, \033[94mfreemium\033[0m, \033[95mgames\033[0m,"
 	@echo "  \033[96mmarketing\033[0m, \033[91mprogression\033[0m, \033[92mshop\033[0m, \033[93mtesting\033[0m, \033[94mtools\033[0m"
 	@echo ""
-		@echo "\033[95m ------------------------------"	
+		@echo "\033[95m ------------------------------"
 	@echo "\033[34m ⣿⣿⣿⡷⠊⡢⡹⣦⡑⢂⢕⢂⢕⢂⢕⢂⠕⠔⠌⠝⠛⠶⠶⢶⣦⣄⢂⢕⢂⢕"
 		@echo "\033[34m ⣿⣿⠏⣠⣾⣦⡐⢌⢿⣷⣦⣅⡑⠕⠡⠐⢿⠿⣛⠟⠛⠛⠛⠛⠡⢷⡈⢂⢕⢂"
 		@echo "\033[34m ⠟⣡⣾⣿⣿⣿⣿⣦⣑⠝⢿⣿⣿⣿⣿⣿⡵⢁⣤⣶⣶⣿⢿⢿⢿⡟⢻⣤⢑⢂"
@@ -70,7 +70,7 @@ help:
 		@echo "\033[32m ⠣⡁⠹⡪⡪⡪⡪⣪⣾⣿⣿⣿⣿⠋⠐⢉⢍⢄⢌⠻⣿⣿⣿⣿⣿⣿⣿⣿⠏⠈"
 		@echo "\033[32m ⡣⡘⢄⠙⣾⣾⣾⣿⣿⣿⣿⣿⣿⡀⢐⢕⢕⢕⢕⢕⡘⣿⣿⣿⣿⣿⣿⠏⠠⠈"
 		@echo "\033[32m ⠌⢊⢂⢣⠹⣿⣿⣿⣿⣿⣿⣿⣿⣧⢐⢕⢕⢕⢕⢕⢅⣿⣿⣿⣿⡿⢋⢜⠠⠈"
-		@echo "\033[95m ------------------------------"		
+		@echo "\033[95m ------------------------------"
 		@echo "\033[0m"
 
 
@@ -104,20 +104,20 @@ check:
 	@ruff check .
 	$(call ASCII)
 
-	
+
 # ==================== Syntax Checking (Ruff) ====================
 fix:
 	@echo "\033[1;3;4;96m======== ruff fix All Code ========\033[0m"
 	@ruff check . --fix
 	$(call ASCII)
-	
+
 
 # ======================= In Depth Linting (pylint)=======================
 pylint:
 	@echo "\033[1;3;4;96m======== Linting All Code ========\033[0m"
 	@pylint .
 	$(call ASCII)
-	
+
 # ======================= Type Checking (mypy) =======================
 mypy:
 	@echo "\033[1;3;4;96m======== Type Checking All Code ========\033[0m"
@@ -146,9 +146,8 @@ tree:
 	@echo "\033[1;3;4;96m======== Creating Tree ========\033[0m"
 	@tree -I 'node_modules|.git|*.log|dist|build|*.cache|certgames.egg-info|context|.venv|*.env|qa_context'
 	$(call ASCII)
-	
+
 TODO:
 	@echo "\033[1;3;4;96m======== Looking for TODO's ========\033[0m"
 	@find . -name "*.py" -print0 | xargs -0 pylint --disable=all --enable=W0511 --msg-template='{path}:{line}:{column}: {msg_id}: {msg} ({symbol})' || true
 	$(call ASCII)
-

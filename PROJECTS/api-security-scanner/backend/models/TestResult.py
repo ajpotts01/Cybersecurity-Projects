@@ -8,7 +8,7 @@ from sqlalchemy import (
     Enum,
     Integer,
     Text,
-    ForeignKey,    
+    ForeignKey,
 )
 from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import JSON
@@ -25,6 +25,7 @@ class TestResult(BaseModel):
     """
     Stores individual test results for each security scan
     """
+
     __tablename__ = "test_results"
 
     scan_id = Column(

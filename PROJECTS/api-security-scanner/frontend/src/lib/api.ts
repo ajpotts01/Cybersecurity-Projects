@@ -43,7 +43,9 @@ axiosInstance.interceptors.response.use(
   (error: AxiosError) => {
     if (error.response?.status === 401) {
       const requestUrl = error.config?.url ?? '';
-      const isAuthEndpoint = requestUrl.includes('/auth/login') || requestUrl.includes('/auth/register');
+      const isAuthEndpoint =
+        requestUrl.includes('/auth/login') ||
+        requestUrl.includes('/auth/register');
 
       if (!isAuthEndpoint) {
         localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);

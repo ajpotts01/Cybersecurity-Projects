@@ -17,7 +17,7 @@ export default tseslint.config(
   },
 
   js.configs.recommended,
-  
+
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
 
@@ -49,10 +49,10 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', fixStyle: 'inline-type-imports' }],
-      '@typescript-eslint/explicit-function-return-type': ['error', { 
-        allowExpressions: true, 
-        allowTypedFunctionExpressions: true, 
-        allowHigherOrderFunctions: true, 
+      '@typescript-eslint/explicit-function-return-type': ['error', {
+        allowExpressions: true,
+        allowTypedFunctionExpressions: true,
+        allowHigherOrderFunctions: true,
         allowDirectConstAssertionInArrowFunctions: true,
         allowedNames: ['Component']
       }],
@@ -60,9 +60,9 @@ export default tseslint.config(
       '@typescript-eslint/no-non-null-assertion': 'error',
       '@typescript-eslint/array-type': ['error', { default: 'array' }],
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-confusing-void-expression': 'off', 
-      '@typescript-eslint/no-unnecessary-condition': 'off', 
-      '@typescript-eslint/no-floating-promises': 'error', 
+      '@typescript-eslint/no-confusing-void-expression': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/no-floating-promises': 'error',
       '@typescript-eslint/strict-boolean-expressions': ['error', {
         allowString: false,
         allowNumber: false,

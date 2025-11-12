@@ -13,7 +13,9 @@ import { router } from '@/router';
 import { useAuthStore } from '@/store/authStore';
 
 const AuthInitializer = (): null => {
-  const loadUserFromStorage = useAuthStore((state) => state.loadUserFromStorage);
+  const loadUserFromStorage = useAuthStore(
+    (state) => state.loadUserFromStorage,
+  );
 
   useEffect(() => {
     loadUserFromStorage();
@@ -27,7 +29,12 @@ function App(): React.ReactElement {
     <QueryClientProvider client={queryClient}>
       <AuthInitializer />
       <RouterProvider router={router} />
-      <Toaster position="top-right" closeButton duration={4500} theme="dark" />
+      <Toaster
+        position="top-right"
+        closeButton
+        duration={4500}
+        theme="dark"
+      />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

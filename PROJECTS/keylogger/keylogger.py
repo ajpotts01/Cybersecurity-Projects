@@ -3,7 +3,7 @@ CarterPerez-dev | 2025
 This keylogger demonstrates:
 keyboard event capture, log management, and remote delivery
 
-Unauthorized use of keyloggers is illegal. 
+Unauthorized use of keyloggers is illegal.
 Only use on systems you own or have permission to monitor
 """
 
@@ -11,11 +11,11 @@ import sys
 import logging
 import platform
 from enum import (
-    Enum, 
+    Enum,
     auto,
 )
 from threading import (
-    Event, 
+    Event,
     Lock,
 )
 from pathlib import Path

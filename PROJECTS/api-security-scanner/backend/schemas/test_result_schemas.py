@@ -22,6 +22,7 @@ class TestResultCreate(BaseModel):
     """
     Schema for creating a new test result (used by scanners)
     """
+
     test_name: TestType
     status: ScanStatus
     severity: Severity
@@ -34,6 +35,7 @@ class TestResultResponse(BaseModel):
     """
     Schema for individual test result in API responses
     """
+
     model_config = ConfigDict(from_attributes = True)
 
     id: int

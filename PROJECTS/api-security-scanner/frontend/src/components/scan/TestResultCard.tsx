@@ -59,10 +59,15 @@ export const TestResultCard = ({
 
         {result.recommendations_json.length > 0 ? (
           <div className="test-result-card__section">
-            <h4 className="test-result-card__section-title">Recommendations</h4>
+            <h4 className="test-result-card__section-title">
+              Recommendations
+            </h4>
             <ul className="test-result-card__recommendations">
               {result.recommendations_json.map((rec) => (
-                <li key={`${result.id.toString()}-rec-${rec}`} className="test-result-card__recommendation">
+                <li
+                  key={`${result.id.toString()}-rec-${rec}`}
+                  className="test-result-card__recommendation"
+                >
                   {rec}
                 </li>
               ))}
@@ -78,9 +83,7 @@ export const TestResultCard = ({
               className="test-result-card__evidence-toggle"
               aria-expanded={showEvidence}
             >
-              <span>
-                {showEvidence ? '▼' : '▶'} Technical Evidence
-              </span>
+              <span>{showEvidence ? '▼' : '▶'} Technical Evidence</span>
             </button>
             {showEvidence ? (
               <pre className="test-result-card__evidence">

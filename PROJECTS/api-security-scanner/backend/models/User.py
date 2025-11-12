@@ -17,6 +17,7 @@ class User(BaseModel):
     """
     Stores authentication credentials and user information
     """
+
     __tablename__ = "users"
 
     email = Column(

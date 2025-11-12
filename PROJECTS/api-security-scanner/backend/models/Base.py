@@ -1,6 +1,6 @@
 """
 ⒸAngelaMos | 2025
-Base model class 
+Base model class
 Common fields and methods for all models
 """
 
@@ -21,6 +21,7 @@ class BaseModel(Base):
     Abstract base model with common fields and methods
     All models inherit from this class
     """
+
     __abstract__ = True
 
     id = Column(

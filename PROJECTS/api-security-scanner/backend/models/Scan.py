@@ -24,6 +24,7 @@ class Scan(BaseModel):
     """
     Stores metadata about scans performed on target URLs
     """
+
     __tablename__ = "scans"
 
     user_id = Column(
