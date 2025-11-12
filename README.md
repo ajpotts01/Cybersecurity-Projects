@@ -27,14 +27,14 @@
 
 ---
 
-# Projects 
+# Projects (Each Links To Their Respective Brief instructions)
 
 ## Beginner Projects
 
 ### [Simple Port Scanner](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/SYNOPSES/beginner/Simple.Port.Scanner.md)
 Build a Python script using the `socket` library to test common ports (22, 80, 443, 3306, etc.) on a target IP. Implement threading or asyncio to scan multiple ports concurrently for speed. Add service detection by analyzing banner responses from open ports.
 
-### *FULLY BUILT HERE:* [Keylogger](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/keylogger)
+### *SOURCE CODE:* [/Keylogger](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/keylogger)
 Use Python's `pynput` library to capture keyboard events and log them to a local file with timestamps. Include a toggle key (like F12) to start/stop logging. **Important**: Add clear disclaimers and only test on systems you own.
 
 ### [Caesar Cipher](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/SYNOPSES/beginner/Caesar.Cipher.md)
@@ -168,7 +168,7 @@ Scan Docker environments for security issues (privileged containers, exposed por
 
 ## Advanced Projects
 
-### *FULLY BUILT HERE:* [Full Stack API Security Scanner](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/api-security-scanner)
+### *SOURCE CODE:* [Full Stack API Security Scanner](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/api-security-scanner)
 Build an enterprise-grade automated API security scanner that performs deep vulnerability assessment across REST, GraphQL, and SOAP endpoints, detecting OWASP API Top 10 flaws through intelligent fuzzing, authentication bypass testing, broken object level authorization, mass assignment exploitation, and rate limiting analysis with ML-enhanced payload generation and comprehensive reporting dashboards. (FastAPI - React-Typescript - Vite - Nginx - Docker - CSS)
 
 ### [Exploit Development Framework](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/SYNOPSES/advanced/Exploit.Development.Framework.md)
