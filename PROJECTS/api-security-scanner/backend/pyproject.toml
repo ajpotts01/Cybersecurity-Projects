@@ -190,6 +190,7 @@ disable_error_code = [
     "call-arg",
     "dict-item",
     "abstract",
+    "import-untyped",
 ]
 
 
