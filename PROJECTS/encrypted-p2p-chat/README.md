@@ -83,60 +83,190 @@ make down-prod         # Stop production environment
 
 ```
 encrypted-p2p-chat/
-├── backend/
-│   ├── app/
-│   │   ├── api/                    # API endpoints
-│   │   │   ├── auth.py            # WebAuthn authentication
-│   │   │   ├── encryption.py      # Prekey bundle endpoints
-│   │   │   └── websocket.py       # WebSocket endpoint
-│   │   ├── core/
-│   │   │   ├── encryption/
-│   │   │   │   ├── x3dh_manager.py      # X3DH key exchange
-│   │   │   │   └── double_ratchet.py    # Double Ratchet engine
-│   │   │   ├── passkey/
-│   │   │   │   └── passkey_manager.py   # WebAuthn manager
-│   │   │   ├── exceptions.py      # Custom exceptions
-│   │   │   ├── redis_manager.py   # Redis client
-│   │   │   ├── surreal_manager.py # SurrealDB client
-│   │   │   └── websocket_manager.py # WebSocket connections
-│   │   ├── models/                # SQLModel database models
-│   │   ├── schemas/               # Pydantic schemas
-│   │   ├── services/              # Business logic layer
-│   │   ├── config.py              # Configuration and constants
-│   │   ├── factory.py             # FastAPI app factory
-│   │   └── main.py                # Entry point
-│   ├── tests/                     # Pytest tests
-│   ├── Dockerfile                 # Production
-│   ├── Dockerfile.dev             # Development
-│   └── pyproject.toml
-├── frontend/
-│   ├── src/
-│   │   ├── pages/                 # SolidJS pages
-│   │   ├── App.tsx                # Root component with routes
-│   │   ├── index.tsx              # Entry point
-│   │   ├── index.css              # Tailwind imports
-│   │   └── config.ts              # Constants
-│   ├── public/
-│   │   └── index.html
-│   ├── Dockerfile                 # Production
-│   ├── Dockerfile.dev             # Development
-│   ├── vite.config.ts
-│   ├── tsconfig.json
-│   └── package.json
-├── nginx/
-│   ├── nginx.dev.conf             # Development config
-│   ├── nginx.prod.conf            # Production config
-│   └── Dockerfile
-├── docker-compose.yml             # Production
-├── docker-compose.dev.yml         # Development
 ├── Makefile
-└── .env.example
-
+├── README.md
+├── backend
+│   ├── alembic
+│   │   ├── README
+│   │   ├── env.py
+│   │   ├── script.py.mako
+│   │   └── versions
+│   ├── alembic.ini
+│   ├── app
+│   │   ├── api
+│   │   │   ├── auth.py
+│   │   │   ├── encryption.py
+│   │   │   ├── rooms.py
+│   │   │   └── websocket.py
+│   │   ├── config.py
+│   │   ├── core
+│   │   │   ├── encryption
+│   │   │   │   ├── double_ratchet.py
+│   │   │   │   └── x3dh_manager.py
+│   │   │   ├── enums.py
+│   │   │   ├── exception_handlers.py
+│   │   │   ├── exceptions.py
+│   │   │   ├── passkey
+│   │   │   │   └── passkey_manager.py
+│   │   │   ├── redis_manager.py
+│   │   │   ├── surreal_manager.py
+│   │   │   └── websocket_manager.py
+│   │   ├── factory.py
+│   │   ├── main.py
+│   │   ├── models
+│   │   │   ├── Base.py
+│   │   │   ├── Credential.py
+│   │   │   ├── IdentityKey.py
+│   │   │   ├── OneTimePrekey.py
+│   │   │   ├── RatchetState.py
+│   │   │   ├── SignedPrekey.py
+│   │   │   ├── SkippedMessageKey.py
+│   │   │   └── User.py
+│   │   ├── schemas
+│   │   │   ├── auth.py
+│   │   │   ├── common.py
+│   │   │   ├── rooms.py
+│   │   │   ├── surreal.py
+│   │   │   └── websocket.py
+│   │   └── services
+│   │       ├── auth_service.py
+│   │       ├── message_service.py
+│   │       ├── prekey_service.py
+│   │       ├── presence_service.py
+│   │       └── websocket_service.py
+│   ├── encrypted_p2p_chat.egg-info
+│   │   ├── PKG-INFO
+│   │   ├── SOURCES.txt
+│   │   ├── dependency_links.txt
+│   │   ├── requires.txt
+│   │   └── top_level.txt
+│   ├── pyproject.toml
+│   └── tests
+│       ├── conftest.py
+│       ├── test_auth_service.py
+│       ├── test_encryption.py
+│       ├── test_message_service.py
+│       └── test_x3dh.py
+├── conf
+│   ├── docker
+│   │   ├── dev
+│   │   │   ├── fastapi.docker
+│   │   │   └── vite.docker
+│   │   └── prod
+│   │       ├── fastapi.docker
+│   │       └── vite.docker
+│   └── nginx
+│       ├── dev.nginx
+│       ├── http.conf
+│       └── prod.nginx
+├── docker-compose.dev.yml
+├── docker-compose.prod.yml
+└── frontend
+    ├── README.md
+    ├── eslint.config.js
+    ├── index.html
+    ├── package-lock.json
+    ├── package.json
+    ├── public
+    ├── src
+    │   ├── App.tsx
+    │   ├── components
+    │   │   ├── Auth
+    │   │   │   ├── AuthCard.tsx
+    │   │   │   ├── AuthForm.tsx
+    │   │   │   ├── PasskeyButton.tsx
+    │   │   │   └── index.ts
+    │   │   ├── Chat
+    │   │   │   ├── ChatHeader.tsx
+    │   │   │   ├── ChatInput.tsx
+    │   │   │   ├── ConversationItem.tsx
+    │   │   │   ├── ConversationList.tsx
+    │   │   │   ├── EncryptionBadge.tsx
+    │   │   │   ├── MessageBubble.tsx
+    │   │   │   ├── MessageList.tsx
+    │   │   │   ├── NewConversation.tsx
+    │   │   │   ├── OnlineStatus.tsx
+    │   │   │   ├── TypingIndicator.tsx
+    │   │   │   ├── UserSearch.tsx
+    │   │   │   └── index.ts
+    │   │   ├── Layout
+    │   │   │   ├── AppShell.tsx
+    │   │   │   ├── Header.tsx
+    │   │   │   ├── ProtectedRoute.tsx
+    │   │   │   ├── Sidebar.tsx
+    │   │   │   └── index.ts
+    │   │   └── UI
+    │   │       ├── Avatar.tsx
+    │   │       ├── Badge.tsx
+    │   │       ├── Button.tsx
+    │   │       ├── Dropdown.tsx
+    │   │       ├── IconButton.tsx
+    │   │       ├── Input.tsx
+    │   │       ├── Modal.tsx
+    │   │       ├── Skeleton.tsx
+    │   │       ├── Spinner.tsx
+    │   │       ├── TextArea.tsx
+    │   │       ├── Toast.tsx
+    │   │       ├── Tooltip.tsx
+    │   │       └── index.ts
+    │   ├── config.ts
+    │   ├── crypto
+    │   │   ├── crypto-service.ts
+    │   │   ├── double-ratchet.ts
+    │   │   ├── index.ts
+    │   │   ├── key-store.ts
+    │   │   ├── primitives.ts
+    │   │   └── x3dh.ts
+    │   ├── index.css
+    │   ├── index.tsx
+    │   ├── lib
+    │   │   ├── api-client.ts
+    │   │   ├── base64.ts
+    │   │   ├── date.ts
+    │   │   ├── index.ts
+    │   │   └── validators.ts
+    │   ├── pages
+    │   │   ├── Chat.tsx
+    │   │   ├── Home.tsx
+    │   │   ├── Login.tsx
+    │   │   ├── NotFound.tsx
+    │   │   └── Register.tsx
+    │   ├── services
+    │   │   ├── auth.service.ts
+    │   │   └── index.ts
+    │   ├── stores
+    │   │   ├── auth.store.ts
+    │   │   ├── index.ts
+    │   │   ├── messages.store.ts
+    │   │   ├── presence.store.ts
+    │   │   ├── rooms.store.ts
+    │   │   ├── session.store.ts
+    │   │   ├── settings.store.ts
+    │   │   ├── typing.store.ts
+    │   │   └── ui.store.ts
+    │   ├── styles
+    │   ├── types
+    │   │   ├── api.ts
+    │   │   ├── auth.ts
+    │   │   ├── chat.ts
+    │   │   ├── components.ts
+    │   │   ├── encryption.ts
+    │   │   ├── guards.ts
+    │   │   ├── index.ts
+    │   │   └── websocket.ts
+    │   ├── vite-env.d.ts
+    │   └── websocket
+    │       ├── index.ts
+    │       ├── message-handlers.ts
+    │       └── websocket-manager.ts
+    ├── tsconfig.json
+    └── vite.config.ts
+```
 ## Features
 
 ### Authentication
 - Passwordless login with WebAuthn/Passkeys
-- Discoverable credentials (device-based auth)
+- Discoverable credentials (device based auth)
 - Multi-device support
 - Signature counter verification
 
@@ -145,7 +275,7 @@ encrypted-p2p-chat/
 - X3DH key exchange for async messaging
 - Forward secrecy
 - Break-in recovery
-- Out-of-order message handling
+- Out of order message handling
 
 ### Real-time Messaging
 - WebSocket connections
@@ -173,7 +303,6 @@ python -m pytest tests/ -v
 cd frontend
 npm install
 npm run dev
-npm run typecheck
 npm run lint
 ```
 
@@ -224,7 +353,7 @@ Shared Secret
     ↓
 Double Ratchet Initialization
     ↓
-Per-Message Encryption (AES-256-GCM)
+Per Message Encryption (AES-256-GCM)
 ```
 
 ### WebSocket Flow
