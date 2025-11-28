@@ -109,11 +109,13 @@ ignore = [
     "RUF002", # Docstring with ambiguous unicode
     "B008",   # FastAPI Depends() in defaults is standard pattern
     "ARG001", # Unused function args (lifespan protocol)
+    "E712",   # SQLAlchemy requires == True/False for query filters
 ]
 
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+"tests/*" = ["ARG002"]
 
 [tool.mypy]
 python_version = "3.13"
@@ -152,7 +154,7 @@ disable_error_code = ["union-attr", "type-arg"]
 
 [[tool.mypy.overrides]]
 module = "app.services.auth_service"
-disable_error_code = ["arg-type", "no-any-return"]
+disable_error_code = ["arg-type", "no-any-return", "attr-defined"]
 
 [[tool.mypy.overrides]]
 module = "app.services.prekey_service"
@@ -238,6 +240,8 @@ max-positional-arguments = 7
 [tool.pylint."messages control"]
 per-file-ignores = [
     "alembic/env.py:W0611",  # Unused imports needed for SQLModel metadata
+    "app/services/*:C0121",  # SQLAlchemy requires == True/False for query filters
+    "tests/*:W0212,W0621",   # Tests access protected members; pytest fixtures reuse names
 ]
 
 

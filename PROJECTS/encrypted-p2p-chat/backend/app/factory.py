@@ -25,6 +25,7 @@ from app.config import (
 )
 from app.models.Base import init_db
 from app.api.auth import router as auth_router
+from app.api.rooms import router as rooms_router
 from app.core.surreal_manager import surreal_db
 from app.core.redis_manager import redis_manager
 from app.api.encryption import router as encryption_router
@@ -106,6 +107,7 @@ def create_app() -> FastAPI:
         return HealthResponse(status = "healthy")
 
     app.include_router(auth_router)
+    app.include_router(rooms_router)
     app.include_router(encryption_router)
     app.include_router(websocket_router)
 

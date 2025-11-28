@@ -87,6 +87,7 @@ class SurrealDBManager:
         """
         await self.ensure_connected()
         result = await self.db.create("messages", message_data)
+        result["id"] = str(result["id"])
         return MessageResponse(**result)
 
     async def get_room_messages(
@@ -123,6 +124,7 @@ class SurrealDBManager:
         """
         await self.ensure_connected()
         result = await self.db.create("rooms", room_data)
+        result["id"] = str(result["id"])
         return RoomResponse(**result)
 
     async def get_user_rooms(self, user_id: str) -> list[RoomResponse]:
@@ -235,7 +237,8 @@ class SurrealDBManager:
         """
         await self.ensure_connected()
         room = await self.db.create("rooms", room_data)
-        room_id = room["id"]
+        room_id = str(room["id"])
+        room["id"] = room_id
 
         asyncio.create_task(self._schedule_room_deletion(room_id, ttl_seconds))
         return RoomResponse(**room)

@@ -33,6 +33,12 @@ from app.schemas.websocket import (
     WSHeartbeat,
 )
 from app.schemas.common import HealthResponse, RootResponse
+from app.schemas.rooms import (
+    CreateRoomRequest,
+    ParticipantResponse,
+    RoomAPIResponse,
+    RoomListResponse,
+)
 
 
 __all__ = [
@@ -61,4 +67,8 @@ __all__ = [
     "WSHeartbeat",
     "RootResponse",
     "HealthResponse",
+    "CreateRoomRequest",
+    "ParticipantResponse",
+    "RoomAPIResponse",
+    "RoomListResponse",
 ]
