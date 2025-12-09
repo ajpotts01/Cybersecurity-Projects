@@ -14,7 +14,6 @@ class Settings(BaseSettings):
     All magic numbers and configuration values are defined here to avoid
     hardcoding throughout the application
     """
-
     model_config = SettingsConfigDict(
         env_file="../.env", env_file_encoding="utf-8", case_sensitive=True
     )

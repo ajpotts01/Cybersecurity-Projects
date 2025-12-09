@@ -7,6 +7,7 @@ import asyncio
 import logging
 from typing import Any
 from collections.abc import Callable
+from datetime import UTC, datetime
 
 from surrealdb import AsyncSurreal
 
@@ -240,8 +241,7 @@ class SurrealDBManager:
         Add a participant to a room
         """
         await self.ensure_connected()
-        from datetime import UTC, datetime
-
+       
         query = """
             CREATE room_participants CONTENT {
                 room_id: $room_id,
