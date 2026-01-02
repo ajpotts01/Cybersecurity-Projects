@@ -10,40 +10,88 @@ on:
 
 jobs:
   lint:
-    name: Run Linters
+    name: Lint ${{ matrix.name }}
     runs-on: ubuntu-latest
 
     permissions:
       pull-requests: write
       contents: read
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: api-rate-limiter
+            type: python
+            path: PROJECTS/api-rate-limiter
+          - name: dns-lookup
+            type: python
+            path: PROJECTS/dns-lookup
+          - name: keylogger
+            type: python
+            path: PROJECTS/keylogger
+          - name: api-security-scanner
+            type: typescript
+            path: PROJECTS/api-security-scanner/frontend
+          - name: docker-security-audit
+            type: go
+            path: PROJECTS/docker-security-audit
+
     defaults:
       run:
-        working-directory: PROJECTS/backend
+        working-directory: ${{ matrix.path }}
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    # Python Setup
     - name: Set up Python
+      if: matrix.type == 'python'
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
     - name: Cache pip dependencies
+      if: matrix.type == 'python'
       uses: actions/cache@v4
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('PROJECTS/backend/pyproject.toml') }}
+        key: ${{ runner.os }}-pip-${{ matrix.name }}-${{ hashFiles(format('{0}/pyproject.toml', matrix.path)) }}
         restore-keys: |
+          ${{ runner.os }}-pip-${{ matrix.name }}-
           ${{ runner.os }}-pip-
 
-    - name: Install dependencies
+    - name: Install Python dependencies
+      if: matrix.type == 'python'
       run: |
         python -m pip install --upgrade pip
         pip install -e ".[dev]"
 
+    # TypeScript Setup
+    - name: Setup Node.js
+      if: matrix.type == 'typescript'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: ${{ matrix.path }}/package-lock.json
+
+    - name: Install TypeScript dependencies
+      if: matrix.type == 'typescript'
+      run: npm install
+
+    # Go Setup
+    - name: Setup Go
+      if: matrix.type == 'go'
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+        cache-dependency-path: ${{ matrix.path }}/go.sum
+
+    # Python Linting
     - name: Run pylint
+      if: matrix.type == 'python'
       id: pylint
       run: |
         echo "Running pylint..."
@@ -58,6 +106,7 @@ jobs:
       continue-on-error: true
 
     - name: Run ruff
+      if: matrix.type == 'python'
       id: ruff
       run: |
         echo "Running ruff check..."
@@ -72,6 +121,7 @@ jobs:
       continue-on-error: true
 
     - name: Run mypy
+      if: matrix.type == 'python'
       id: mypy
       run: |
         echo "Running mypy..."
@@ -85,20 +135,67 @@ jobs:
         cat mypy-output.txt
       continue-on-error: true
 
-    - name: Create Lint Summary
-      id: create_summary
-      if: github.event_name == 'pull_request'
+    # TypeScript Linting
+    - name: Run ESLint
+      if: matrix.type == 'typescript'
+      id: eslint
+      run: |
+        echo "Running ESLint..."
+        if npm run lint:eslint > eslint-output.txt 2>&1; then
+          echo "ESLINT_PASSED=true" >> $GITHUB_ENV
+          echo "No ESLint errors found!"
+        else
+          echo "ESLINT_PASSED=false" >> $GITHUB_ENV
+          echo "ESLint found issues!"
+        fi
+        cat eslint-output.txt
+      continue-on-error: true
+
+    - name: Run TypeScript Check
+      if: matrix.type == 'typescript'
+      id: tsc
+      run: |
+        echo "Running TypeScript type checking..."
+        if npx tsc --noEmit > tsc-output.txt 2>&1; then
+          echo "TSC_PASSED=true" >> $GITHUB_ENV
+          echo "No TypeScript errors found!"
+        else
+          echo "TSC_PASSED=false" >> $GITHUB_ENV
+          echo "TypeScript found issues!"
+        fi
+        cat tsc-output.txt
+      continue-on-error: true
+
+    # Go Linting
+    - name: Run golangci-lint
+      if: matrix.type == 'go'
+      id: golangci
+      run: |
+        echo "Running golangci-lint..."
+        if golangci-lint run --out-format=colored-line-number > golangci-output.txt 2>&1; then
+          echo "GOLANGCI_PASSED=true" >> $GITHUB_ENV
+          echo "No golangci-lint errors found!"
+        else
+          echo "GOLANGCI_PASSED=false" >> $GITHUB_ENV
+          echo "golangci-lint found issues!"
+        fi
+        cat golangci-output.txt
+      continue-on-error: true
+
+    # Create Summary for Python
+    - name: Create Python Lint Summary
+      if: matrix.type == 'python' && github.event_name == 'pull_request'
       run: |
         {
-          echo '##Lint & Type Check Results'
+          echo "## Lint Results: ${{ matrix.name }}"
           echo ''
 
           # Pylint Status
           if [[ "${{ env.PYLINT_PASSED }}" == "true" ]]; then
-            echo '###Pylint: **Passed**'
+            echo '### Pylint: **Passed**'
             echo 'No pylint issues found.'
           else
-            echo '###Pylint: **Issues Found**'
+            echo '### Pylint: **Issues Found**'
             echo '<details><summary>View pylint output</summary>'
             echo ''
             echo '```'
@@ -110,10 +207,10 @@ jobs:
 
           # Ruff Status
           if [[ "${{ env.RUFF_PASSED }}" == "true" ]]; then
-            echo '###Ruff: **Passed**'
+            echo '### Ruff: **Passed**'
             echo 'No ruff issues found.'
           else
-            echo '### ⚠️ Ruff: **Issues Found**'
+            echo '### Ruff: **Issues Found**'
             echo '<details><summary>View ruff output</summary>'
             echo ''
             echo '```'
@@ -144,16 +241,124 @@ jobs:
             echo '### All checks passed!'
           else
             echo '---'
-            echo '### Review the issues above and consider fixing them.'
+            echo '### Review the issues above'
           fi
           echo ''
-          echo '<!-- lint-check-comment-marker -->'
-        } > ../lint-report.md
+          echo "<!-- lint-check-${{ matrix.name }}-marker -->"
+        } > lint-report.md
 
+    # Create Summary for TypeScript
+    - name: Create TypeScript Lint Summary
+      if: matrix.type == 'typescript' && github.event_name == 'pull_request'
+      run: |
+        {
+          echo "## Lint Results: ${{ matrix.name }}"
+          echo ''
+
+          # ESLint Status
+          if [[ "${{ env.ESLINT_PASSED }}" == "true" ]]; then
+            echo '### ESLint: **Passed**'
+            echo 'No ESLint issues found.'
+          else
+            echo '### ESLint: **Issues Found**'
+            echo '<details><summary>View ESLint output</summary>'
+            echo ''
+            echo '```'
+            head -100 eslint-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          # TypeScript Status
+          if [[ "${{ env.TSC_PASSED }}" == "true" ]]; then
+            echo '### TypeScript: **Passed**'
+            echo 'No type errors found.'
+          else
+            echo '### TypeScript: **Issues Found**'
+            echo '<details><summary>View TypeScript output</summary>'
+            echo ''
+            echo '```'
+            head -100 tsc-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          # Overall Summary
+          if [[ "${{ env.ESLINT_PASSED }}" == "true" ]] && [[ "${{ env.TSC_PASSED }}" == "true" ]]; then
+            echo '---'
+            echo '### All checks passed!'
+          else
+            echo '---'
+            echo '### Review the issues above'
+          fi
+          echo ''
+          echo "<!-- lint-check-${{ matrix.name }}-marker -->"
+        } > lint-report.md
+
+    # Create Summary for Go
+    - name: Create Go Lint Summary
+      if: matrix.type == 'go' && github.event_name == 'pull_request'
+      run: |
+        {
+          echo "## Lint Results: ${{ matrix.name }}"
+          echo ''
+
+          # golangci-lint Status
+          if [[ "${{ env.GOLANGCI_PASSED }}" == "true" ]]; then
+            echo '### golangci-lint: **Passed**'
+            echo 'No golangci-lint issues found.'
+          else
+            echo '### golangci-lint: **Issues Found**'
+            echo '<details><summary>View golangci-lint output</summary>'
+            echo ''
+            echo '```'
+            head -100 golangci-output.txt
+            echo '```'
+            echo '</details>'
+          fi
+          echo ''
+
+          # Overall Summary
+          if [[ "${{ env.GOLANGCI_PASSED }}" == "true" ]]; then
+            echo '---'
+            echo '### All checks passed!'
+          else
+            echo '---'
+            echo '### Review the issues above'
+          fi
+          echo ''
+          echo "<!-- lint-check-${{ matrix.name }}-marker -->"
+        } > lint-report.md
+
+    # Post PR Comment
     - name: Post PR Comment
       if: github.event_name == 'pull_request'
       uses: peter-evans/create-or-update-comment@v4
       with:
         issue-number: ${{ github.event.pull_request.number }}
-        body-path: PROJECTS/api-security-scanner/lint-report.md
-        comment-marker: lint-check-comment-marker
+        body-path: ${{ matrix.path }}/lint-report.md
+        edit-mode: replace
+        comment-tag: lint-check-${{ matrix.name }}
+
+    # Exit with proper status
+    - name: Check lint status
+      run: |
+        if [[ "${{ matrix.type }}" == "python" ]]; then
+          if [[ "${{ env.PYLINT_PASSED }}" == "false" ]] || [[ "${{ env.RUFF_PASSED }}" == "false" ]] || [[ "${{ env.MYPY_PASSED }}" == "false" ]]; then
+            echo "Python lint checks failed"
+            exit 1
+          fi
+        elif [[ "${{ matrix.type }}" == "typescript" ]]; then
+          if [[ "${{ env.ESLINT_PASSED }}" == "false" ]] || [[ "${{ env.TSC_PASSED }}" == "false" ]]; then
+            echo "TypeScript lint checks failed"
+            exit 1
+          fi
+        elif [[ "${{ matrix.type }}" == "go" ]]; then
+          if [[ "${{ env.GOLANGCI_PASSED }}" == "false" ]]; then
+            echo "Go lint checks failed"
+            exit 1
+          fi
+        fi
+        echo "All lint checks passed"
