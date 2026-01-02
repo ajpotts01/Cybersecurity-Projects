@@ -23,7 +23,7 @@
 <h2 align="center"><strong>View Complete Projects:</strong></h2>
 <div align="center">
   <a href="https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS">
-    <img src="https://img.shields.io/badge/Full_Source_Code-5/60-blue?style=for-the-badge&logo=github" alt="Projects"/>
+    <img src="https://img.shields.io/badge/Full_Source_Code-6/60-blue?style=for-the-badge&logo=github" alt="Projects"/>
   </a>
 </div>
 
@@ -180,8 +180,8 @@ Analyze Linux/Windows systems for potential privilege escalation vectors. Check 
 ### [Network Baseline Monitor](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/SYNOPSES/intermediate/Network.Baseline.Monitor.md)
 Establish normal network behavior patterns (traffic volume, protocol distribution, top talkers). Alert on deviations that could indicate compromises or attacks.
 
-### [Docker Security Audit](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/SYNOPSES/intermediate/Docker.Security.Audit.md)
-Scan Docker environments for security issues (privileged containers, exposed ports, outdated images). Check against CIS Docker Benchmark. Generate remediation reports.
+### *SOURCE CODE:* *[Docker Security Audit](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/docker-security-audit)*
+Go CLI tool that scans Docker containers, images, Dockerfiles, and compose files for security misconfigurations. Checks against CIS Docker Benchmark v1.6.0 controls (privileged mode, dangerous capabilities, sensitive mounts, secrets in images, missing security profiles). Outputs findings with remediation guidance in terminal, JSON, SARIF, or JUnit formats.
 
 ---
 
