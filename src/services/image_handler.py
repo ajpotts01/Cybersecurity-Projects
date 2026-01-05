@@ -2,12 +2,12 @@ import shutil
 from pathlib import Path
 from typing import Optional
 
-import piexif
+import piexif  # pyright: ignore[reportMissingTypeStubs]
 from PIL import Image
 
+from src.core.jpeg_metadata import JpegProcessaor
+from src.core.png_metadata import PngProcessor
 from src.services.metadata_handler import MetadataHandler
-from src.utils.jpeg_metadata import JpegProcessaor
-from src.utils.png_metadata import PngProcessor
 
 
 class ImageHandler(MetadataHandler):

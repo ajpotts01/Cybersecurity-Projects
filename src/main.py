@@ -1,38 +1,38 @@
+import logging
+
 import typer
-from rich.console import Console
-from rich.panel import Panel
+
+from src.commands.read import get_metadata
+from src.utils.logger import setup_logging
 
 # Initialize the app and the console
-app = typer.Typer()
-console = Console()
+app = typer.Typer(no_args_is_help=True, pretty_exceptions_show_locals=False)
+log = logging.getLogger("metadata-scrubber")
 
 
-@app.command()
-def hello(name: str, formal: bool = False):
+# fmt: off
+@app.callback()
+def main(
+    verbose: bool = typer.Option(
+        False,
+        "--verbose",
+        "-v",
+        help="Show detailed debug logs for every file processed.",
+    ),
+):
     """
-    Say hello to a user.
-    If --formal is used, it greets more politely.
+    Metadata Scrubber Tool - Clean your images privacy data.
     """
-    if formal:
-        message = (
-            f"Good day to you, [bold magenta]{name}[/bold magenta]. It is a pleasure."
-        )
-        color = "green"
-    else:
-        message = f"Yo [bold cyan]{name}[/bold cyan]! What's up?"
-        color = "yellow"
+    # Initialize the logger based on the user's flag
+    setup_logging(verbose)
 
-    # Use Rich to print a pretty panel instead of a boring print()
-    console.print(Panel(message, title="Greeting System", style=color))
+    if verbose:
+        log.debug("🐛 Verbose mode enabled. Detailed logs active.")
+# fmt: on
 
+# register commands
+app.command(name="get-metadata")(get_metadata)
 
-@app.command()
-def goodbye(name: str):
-    """
-    Say goodbye.
-    """
-    console.print(f"[red]Goodbye, {name}![/red] 👋")
-
-
+# run app
 if __name__ == "__main__":
     app()
