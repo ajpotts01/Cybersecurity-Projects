@@ -40,6 +40,7 @@ class MetadataFactory:
             UnsupportedFormatError: If no handler is defined for the file type.
             ValueError: If the path is not a valid file.
         """
+        supported_extensions = ".jpg, .jpeg, .png"
         ext = Path(filepath).suffix.lower()
         if Path(filepath).is_file():
             if ext in [".jpg", ".jpeg", ".png"]:
@@ -53,8 +54,11 @@ class MetadataFactory:
             # elif ext == ".pptx":
             #     return PowerPointHandler(filepath)
             else:
-                raise UnsupportedFormatError(f"No handler defined for {ext} files.")
+                print("i ran")
+                raise UnsupportedFormatError(
+                    f"No handler defined for {ext} files. we curently only support {supported_extensions} files."
+                )
         else:
             raise ValueError(
-                f"{filepath} is not a file. if you want to process a directory, use the --recursive flag."
+                f"{filepath} is not a file. if you want to process a directory, use the --recursive or -r flag."
             )

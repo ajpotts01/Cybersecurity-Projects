@@ -131,7 +131,7 @@ class ImageHandler(MetadataHandler):
                     img, self.text_keys_to_delete
                 )
 
-    def save(self, output_path: Optional[str] = None) -> None:
+    def save(self, output_path: Optional[str | Path] = None) -> None:
         """
         Writes the changes to a copy of the original file.
 
@@ -156,6 +156,7 @@ class ImageHandler(MetadataHandler):
             with Image.open(destination_file_path) as img:
                 exif_bytes = piexif.dump(self.processed_metadata)
                 img.save(destination_file_path, exif=exif_bytes)
+
         elif actual_format == "png":
             # PNG: Open original, save fresh copy without metadata
             with Image.open(Path(self.filepath)) as img:
