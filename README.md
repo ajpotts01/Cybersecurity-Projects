@@ -1,6 +1,10 @@
-# 🔒 Metadata Scrubber Tool
+# 🔒 Metadata Scrubber
 
 A privacy-focused CLI tool that removes sensitive metadata (EXIF, GPS, author info) from image files. Perfect for protecting your privacy before sharing photos online.
+
+[![Tests](https://github.com/Heritage-XioN/metadata-scrubber-tool/actions/workflows/test.yml/badge.svg)](https://github.com/Heritage-XioN/metadata-scrubber-tool/actions)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## ✨ Features
 
@@ -11,106 +15,107 @@ A privacy-focused CLI tool that removes sensitive metadata (EXIF, GPS, author in
 - **Beautiful CLI** - Rich progress bars and formatted output
 - **Privacy-first** - Removes GPS coordinates, camera info, timestamps, author data
 
-## 📚 Educational Value
+## 🚀 Quick Start
 
-This project demonstrates:
-- **Factory pattern** for extensible file type handling
-- **Abstract base classes** for consistent handler interfaces
-- **Concurrent processing** with thread-safe operations
-- **CLI development** with Typer and Rich
-- **Image metadata handling** with Pillow and piexif
-
-## 📋 Prerequisites
-
-- Python 3.10+
-- [uv](https://github.com/astral-sh/uv) (recommended) or pip
-
-## 🚀 Installation
+### Installation
 
 ```bash
-# Clone the repository
+# Using uv (recommended)
+uv pip install metadata-scrubber
+
+# Or clone and install locally
 git clone https://github.com/Heritage-XioN/metadata-scrubber-tool.git
 cd metadata-scrubber-tool
-
-# Create virtual environment and install dependencies
-uv venv
-.venv\Scripts\activate  # Windows
-# source .venv/bin/activate  # Linux/Mac
-
-uv pip install -r requirements.txt
+uv sync
 ```
 
-## 📖 Usage
-
-### Read Metadata
+### Basic Usage
 
 ```bash
-# Single file
-python -m src.main read photo.jpg
+# Read metadata from a file
+mst read photo.jpg
 
-# Recursive directory scan
-python -m src.main read ./photos/ -r -ext jpg
+# Scrub metadata and save to output folder
+mst scrub photo.jpg --output ./cleaned
+
+# Batch process entire folder
+mst scrub ./photos -r -ext jpg --output ./cleaned
 ```
 
-### Scrub Metadata
+## 📖 Commands
+
+### `mst read` - View Metadata
 
 ```bash
-# Single file
-python -m src.main scrub photo.jpg --output ./cleaned
+mst read photo.jpg                      # Single file
+mst read ./photos -r -ext jpg           # Directory (recursive)
+```
 
-# Batch process with 8 workers
-python -m src.main scrub ./photos/ -r -ext jpg --output ./cleaned --workers 8
+### `mst scrub` - Remove Metadata
 
-# Preview without changes
-python -m src.main scrub ./photos/ -r -ext jpg --dry-run
+```bash
+mst scrub photo.jpg --output ./out      # Single file
+mst scrub ./photos -r -ext jpg -o ./out # Directory
+mst scrub ./photos -r -ext jpg --dry-run # Preview only
+mst scrub ./photos -r -ext jpg -w 8     # 8 concurrent workers
 ```
 
 ### CLI Options
 
-| Command | Options |
-|---------|---------|
-| `read` | `-r` / `--recursive`, `-ext` / `--extension` |
-| `scrub` | `-r`, `-ext`, `-o` / `--output`, `-d` / `--dry-run`, `-w` / `--workers` |
-| Global | `-V` / `--verbose`,  `-v` / `--version` |
+| Option | Description |
+|--------|-------------|
+| `-r`, `--recursive` | Process directories recursively |
+| `-ext`, `--extension` | Filter by file extension (jpg, png) |
+| `-o`, `--output` | Output directory for cleaned files |
+| `-d`, `--dry-run` | Preview without making changes |
+| `-w`, `--workers` | Number of concurrent workers |
+| `-V`, `--verbose` | Show detailed debug logs |
+| `-v`, `--version` | Show version |
 
-## 🏗️ Architecture
+## 🛠️ Development
+
+### Setup
+
+```bash
+git clone https://github.com/Heritage-XioN/metadata-scrubber-tool.git
+cd metadata-scrubber-tool
+
+# Install with dev dependencies
+uv sync --all-extras
+
+# Run tests
+pytest
+
+# Run linting
+ruff check .
+
+# Run type checking
+mypy src
+```
+
+### Project Structure
 
 ```
 src/
 ├── main.py                 # CLI entry point (Typer app)
 ├── commands/
-│   ├── read.py            # Read metadata command
-│   └── scrub.py           # Scrub metadata command (batch processing)
+│   ├── read.py             # Read metadata command
+│   └── scrub.py            # Scrub metadata command
 ├── services/
 │   ├── metadata_factory.py # Factory for creating handlers
-│   ├── metadata_handler.py # Abstract base class
 │   ├── image_handler.py    # JPEG/PNG handler
 │   └── batch_processor.py  # Concurrent batch processing
-├── core/
-│   ├── jpeg_metadata.py    # JPEG EXIF processor (piexif)
-│   └── png_metadata.py     # PNG metadata processor (PIL)
-└── utils/
-    ├── display.py          # Rich output formatting
-    ├── formatter.py        # Value formatting helpers
-    ├── exceptions.py       # Custom exceptions
-    └── logger.py           # Logging configuration
-```
-
-**Data Flow:**
-```
-CLI Command → MetadataFactory → Handler (read→wipe→save) → Output
-                    ↓
-              Format Detection
-                    ↓
-           JpegProcessor / PngProcessor
+└── core/
+    ├── jpeg_metadata.py    # JPEG EXIF processor
+    └── png_metadata.py     # PNG metadata processor
 ```
 
 ## ⚠️ Security Considerations
 
-- **Always backup files** before scrubbing in production
+- **Original files are never modified** - processed copies are created
 - **Use `--dry-run`** to preview changes before committing
 - **GPS coordinates** are completely stripped for privacy
-- **Original files are not modified** - processed copies are created
+- **Always backup files** before scrubbing in production
 
 ## 📄 License
 
