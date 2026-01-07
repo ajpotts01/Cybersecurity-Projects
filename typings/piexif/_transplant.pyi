@@ -14,4 +14,3 @@ def transplant(exif_src, image, new_file=...): # -> None:
     :param str filename2: JPEG
     """
     ...
-

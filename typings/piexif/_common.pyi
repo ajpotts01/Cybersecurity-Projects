@@ -21,4 +21,3 @@ def merge_segments(segments, exif=...): # -> bytes:
     """Merges Exif with APP0 and APP1 manipulations.
     """
     ...
-

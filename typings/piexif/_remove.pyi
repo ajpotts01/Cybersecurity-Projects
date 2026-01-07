@@ -13,4 +13,3 @@ def remove(src, new_file=...): # -> None:
     :param str filename: JPEG
     """
     ...
-

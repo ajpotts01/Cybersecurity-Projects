@@ -21,12 +21,9 @@ def load(input_data, key_is_name=...): # -> dict[str, Any]:
 class _ExifReader:
     def __init__(self, data) -> None:
         ...
-    
+
     def get_ifd_dict(self, pointer, ifd_name, read_unknown=...): # -> dict[Any, Any]:
         ...
-    
+
     def convert_value(self, val): # -> Any | tuple[Any, Any] | bytes | tuple[Any, ...] | tuple[tuple[Any, Any], ...]:
         ...
-    
-
-

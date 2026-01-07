@@ -14,4 +14,3 @@ def insert(exif, image, new_file=...): # -> None:
     :param str filename: JPEG
     """
     ...
-

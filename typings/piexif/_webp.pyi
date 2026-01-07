@@ -25,4 +25,3 @@ def insert(webp_bytes, exif_bytes): # -> bytes:
 
 def remove(webp_bytes): # -> bytes:
     ...
-

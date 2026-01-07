@@ -26,7 +26,7 @@ class UserComment:
         or the encoding is unsupported.
         """
         ...
-    
+
     @classmethod
     def dump(cls, data, encoding=...):
         """
@@ -39,6 +39,3 @@ class UserComment:
         :raises: ValueError if the encoding is unsupported.
         """
         ...
-    
-
-

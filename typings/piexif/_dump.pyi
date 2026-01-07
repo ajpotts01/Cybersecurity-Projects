@@ -17,4 +17,3 @@ def dump(exif_dict_original): # -> bytes:
     :rtype: bytes
     """
     ...
-
