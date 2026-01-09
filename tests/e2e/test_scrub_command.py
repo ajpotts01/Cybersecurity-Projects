@@ -12,7 +12,13 @@ from typer.testing import CliRunner
 from src.main import app
 
 # Import path helpers from conftest
-from tests.conftest import get_jpg_test_file, get_png_test_file, get_test_images_dir
+from tests.conftest import (
+    get_jpg_test_file,
+    get_pdf_test_file,
+    get_png_test_file,
+    get_test_images_dir,
+    get_test_pdfs_dir,
+)
 
 runner = CliRunner()
 
@@ -20,6 +26,8 @@ runner = CliRunner()
 JPG_TEST_FILE = get_jpg_test_file()
 PNG_TEST_FILE = get_png_test_file()
 EXAMPLES_DIR = get_test_images_dir()
+PDF_TEST_FILE = get_pdf_test_file()
+PDF_DIR = get_test_pdfs_dir()
 
 
 @pytest.fixture
@@ -127,3 +135,69 @@ def test_scrub_command_requires_recursive_with_ext():
     result = runner.invoke(app, ["scrub", JPG_TEST_FILE, "-ext", "jpg"])
 
     assert result.exit_code != 0
+
+
+# ============== PDF E2E Tests ==============
+
+
+def test_scrub_command_pdf_single_file_success(output_dir):
+    """
+    Test the 'scrub' command with a single PDF file.
+    """
+    result = runner.invoke(app, ["scrub", PDF_TEST_FILE, "--output", str(output_dir)])
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    # Check output file was created (has processed_ prefix)
+    output_file = output_dir / f"processed_{Path(PDF_TEST_FILE).name}"
+    assert output_file.exists()
+
+
+def test_scrub_command_recursive_pdf_success(output_dir):
+    """
+    Test the 'scrub' command with recursive directory processing for PDF.
+    """
+    result = runner.invoke(
+        app, ["scrub", PDF_DIR, "-r", "-ext", "pdf", "--output", str(output_dir)]
+    )
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    # Check at least one output file was created
+    output_files = list(output_dir.glob("processed_*.pdf"))
+    assert len(output_files) > 0
+
+
+def test_scrub_command_pdf_dry_run(output_dir):
+    """
+    Test that --dry-run doesn't create PDF files.
+    """
+    result = runner.invoke(
+        app, ["scrub", PDF_TEST_FILE, "--output", str(output_dir), "--dry-run"]
+    )
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    assert "DRY-RUN" in result.stdout
+    # No files should be created in dry-run mode
+    output_file = output_dir / f"processed_{Path(PDF_TEST_FILE).name}"
+    assert not output_file.exists()
+
+
+def test_scrub_command_pdf_with_workers(output_dir):
+    """
+    Test the --workers option for concurrent PDF processing.
+    """
+    result = runner.invoke(
+        app,
+        [
+            "scrub",
+            PDF_DIR,
+            "-r",
+            "-ext",
+            "pdf",
+            "--output",
+            str(output_dir),
+            "--workers",
+            "2",
+        ],
+    )
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"

@@ -31,6 +31,11 @@ def print_metadata_table(metadata: dict[str, Any]):
 
     # Define the groups using simple lists of keys
     groups = {
+        "📄 Document Info": [
+            "Author",
+            "/Author",
+            "/Creator",
+        ],
         "📸 Device Info": ["Make", "Model", "Software", "ExifVersion"],
         "⚙️ Exposure Settings": [
             "ExposureTime",
@@ -49,7 +54,14 @@ def print_metadata_table(metadata: dict[str, Any]):
             "Orientation",
             "ResolutionUnit",
         ],
-        "📅 Dates": ["DateTime", "DateTimeOriginal", "DateTimeDigitized", "OffsetTime"],
+        "📅 Dates": [
+            "DateTime",
+            "DateTimeOriginal",
+            "DateTimeDigitized",
+            "OffsetTime",
+            "/CreationDate",
+            "/ModDate",
+        ],
     }
 
     # Create the main table

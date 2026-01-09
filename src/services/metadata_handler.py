@@ -61,7 +61,7 @@ class MetadataHandler(ABC):
         pass
 
     @abstractmethod
-    def save(self, output_path: str | None = None) -> None:
+    def save(self, output_path: str) -> None:
         """
         Save the processed file with cleaned metadata.
 

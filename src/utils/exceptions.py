@@ -28,3 +28,9 @@ class MetadataProcessingError(MetadataException):
     """Raised when an error occurs during metadata processing."""
 
     pass
+
+
+class MetadataReadingError(MetadataException):
+    """Raised when an error occurs during metadata reading."""
+
+    pass

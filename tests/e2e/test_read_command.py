@@ -6,7 +6,13 @@ from typer.testing import CliRunner
 from src.main import app
 
 # Import path helpers from conftest
-from tests.conftest import get_jpg_test_file, get_png_test_file, get_test_images_dir
+from tests.conftest import (
+    get_jpg_test_file,
+    get_pdf_test_file,
+    get_png_test_file,
+    get_test_images_dir,
+    get_test_pdfs_dir,
+)
 
 runner = CliRunner()
 
@@ -14,6 +20,8 @@ runner = CliRunner()
 JPG_TEST_FILE = get_jpg_test_file()
 PNG_TEST_FILE = get_png_test_file()
 TEST_DIR = get_test_images_dir()
+PDF_TEST_FILE = get_pdf_test_file()
+PDF_DIR = get_test_pdfs_dir()
 
 
 # ============== Success Case Tests ==============
@@ -74,3 +82,27 @@ def test_read_command_file_not_found():
     assert result.exit_code == 2
     assert "Invalid value for 'FILE_PATH'" in result.stderr
     assert "does not exist" in result.stderr
+
+
+# ============== PDF E2E Read Tests ==============
+
+
+def test_read_command_pdf_single_file_success():
+    """
+    Test the 'read' command with a single PDF file.
+    """
+    result = runner.invoke(app, ["read", PDF_TEST_FILE])
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    assert "Reading" in result.stdout
+    assert Path(PDF_TEST_FILE).name in result.stdout
+
+
+def test_read_command_recursive_pdf_success():
+    """
+    Test the 'read' command with recursive directory processing for PDF.
+    """
+    result = runner.invoke(app, ["read", PDF_DIR, "-r", "-ext", "pdf"])
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    assert "Reading" in result.stdout

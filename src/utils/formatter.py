@@ -31,6 +31,10 @@ def clean_value(value: Any) -> str:
     if isinstance(value, tuple) or isinstance(value, list):
         return "/".join(map(str, value))
 
+    if isinstance(value, str) and value.startswith("D:"):
+        clean_iso = f"{value[2:6]}-{value[6:8]}-{value[8:10]}T{value[10:12]}:{value[12:14]}:{value[14:16]}"
+        return clean_iso
+
     # Handle empty values
     if value == "":
         return "-"

@@ -3,22 +3,26 @@ from pathlib import Path
 
 import pytest
 
+from src.core.jpeg_metadata import JpegProcessor
+from src.core.png_metadata import PngProcessor
 from src.services.metadata_factory import MetadataFactory
+from src.services.pdf_handler import PDFHandler
 from src.utils.exceptions import MetadataNotFoundError, UnsupportedFormatError
 
 # Import path helpers from conftest
-from tests.conftest import get_jpg_test_file, get_png_test_file
+from tests.conftest import get_jpg_test_file, get_pdf_test_file, get_png_test_file
 
 # Test file paths (cross-platform)
 JPG_TEST_FILE = get_jpg_test_file()
 PNG_TEST_FILE = get_png_test_file()
+PDF_TEST_FILE = get_pdf_test_file()
 
 
 # ============== Success Case Tests ==============
 
 
 @pytest.mark.parametrize("x", [JPG_TEST_FILE, PNG_TEST_FILE])
-def test_read_image_metadata(x):
+def test_read_metadata(x):
     """
     test for reading image metadata
     """
@@ -30,8 +34,12 @@ def test_read_image_metadata(x):
     # checks if metadata is not empty
     assert handler.metadata == metadata
 
-    # checks if tags_to_delete or text_keys_to_delete is not empty
-    assert handler.tags_to_delete is not None or handler.text_keys_to_delete is not None
+    if isinstance(handler, JpegProcessor | PngProcessor):
+        # checks if tags_to_delete or text_keys_to_delete is not empty
+        assert (
+            handler.tags_to_delete is not None
+            or handler.text_keys_to_delete is not None
+        )
 
     # checks if metadata is a dictionary
     assert isinstance(metadata, dict)
@@ -146,3 +154,92 @@ def test_save_without_output_path_raises_error():
     handler.wipe()
     with pytest.raises(ValueError):
         handler.save(None)
+
+
+# ============== PDF Integration Tests ==============
+
+
+def test_read_pdf_metadata_via_factory():
+    """
+    Test reading PDF metadata through MetadataFactory.
+    """
+    assert Path(PDF_TEST_FILE).exists(), f"Test file not found: {PDF_TEST_FILE}"
+    handler = MetadataFactory.get_handler(PDF_TEST_FILE)
+
+    # Verify correct handler type is returned
+    assert isinstance(handler, PDFHandler)
+
+    metadata = handler.read()
+    assert handler.metadata == metadata
+    assert isinstance(metadata, dict)
+    assert handler.keys_to_delete is not None
+
+
+def test_wipe_pdf_metadata_via_factory():
+    """
+    Test wiping PDF metadata through MetadataFactory.
+    """
+    assert Path(PDF_TEST_FILE).exists(), f"Test file not found: {PDF_TEST_FILE}"
+    handler = MetadataFactory.get_handler(PDF_TEST_FILE)
+    metadata = handler.read()
+    handler.wipe()
+
+    assert handler.processed_metadata != metadata
+
+
+def test_save_processed_pdf_metadata_via_factory():
+    """
+    Test saving processed PDF metadata through MetadataFactory.
+    """
+    output_dir = Path("./tests/assets/output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    handler = MetadataFactory.get_handler(PDF_TEST_FILE)
+    metadata = handler.read()
+    handler.wipe()
+
+    assert handler.processed_metadata != metadata
+
+    output_file = output_dir / Path(PDF_TEST_FILE).name
+    handler.save(str(output_file))
+
+    assert output_file.exists()
+    shutil.rmtree(output_dir)
+
+
+def test_pdf_format_detection_via_factory():
+    """
+    Test that format detection returns 'pdf' for PDF files.
+    """
+    handler = MetadataFactory.get_handler(PDF_TEST_FILE)
+    detected = handler._detect_format()
+    assert detected == "pdf"
+
+
+def test_output_pdf_file_has_less_metadata():
+    """
+    Test that the output PDF file has metadata stripped.
+    """
+    output_dir = Path("./tests/assets/output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Process original file
+    handler = MetadataFactory.get_handler(PDF_TEST_FILE)
+    original_metadata = handler.read()
+    original_count = len(original_metadata)
+    handler.wipe()
+
+    # Save processed file
+    output_file = output_dir / Path(PDF_TEST_FILE).name
+    handler.save(str(output_file))
+
+    # Read output file and verify metadata is reduced or gone
+    try:
+        output_handler = MetadataFactory.get_handler(str(output_file))
+        output_metadata = output_handler.read()
+        assert len(output_metadata) < original_count
+    except MetadataNotFoundError:
+        # If no metadata found, that's expected for fully stripped files
+        pass
+
+    shutil.rmtree(output_dir)

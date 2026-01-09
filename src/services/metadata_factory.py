@@ -9,6 +9,7 @@ extensibility for supporting new file formats (PDF, Office docs, etc.).
 from pathlib import Path
 
 from src.services.image_handler import ImageHandler
+from src.services.pdf_handler import PDFHandler
 from src.utils.exceptions import UnsupportedFormatError
 
 
@@ -45,10 +46,10 @@ class MetadataFactory:
         if Path(filepath).is_file():
             if ext in [".jpg", ".jpeg", ".png"]:
                 return ImageHandler(filepath)
+            elif ext == ".pdf":
+                return PDFHandler(filepath)
 
             # TODO: implement other handlers
-            # elif ext == ".pdf":
-            #     return PDFHandler(filepath)
             # elif ext == ".xlsx":
             #     return ExcelHandler(filepath)
             # elif ext == ".pptx":
