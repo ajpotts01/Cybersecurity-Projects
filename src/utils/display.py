@@ -59,6 +59,8 @@ def print_metadata_table(metadata: dict[str, Any]):
             "DateTimeOriginal",
             "DateTimeDigitized",
             "OffsetTime",
+            "created",
+            "modified",
             "/CreationDate",
             "/ModDate",
         ],

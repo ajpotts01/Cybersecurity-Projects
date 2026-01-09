@@ -13,6 +13,7 @@ TESTS_DIR = Path(__file__).parent
 ASSETS_DIR = TESTS_DIR / "assets"
 TEST_IMAGES_DIR = ASSETS_DIR / "test_images"
 TEST_PDFS_DIR = ASSETS_DIR / "test_pdfs"
+TEST_XLSX_DIR = ASSETS_DIR / "test_xlsx"
 
 
 @pytest.fixture
@@ -75,3 +76,32 @@ def get_large_pdf_test_file() -> str:
 def get_test_pdfs_dir() -> str:
     """Get test PDFs directory path as string."""
     return str(TEST_PDFS_DIR)
+
+
+# Excel fixtures
+@pytest.fixture
+def xlsx_test_file() -> Path:
+    """Return path to an XLSX test file with metadata."""
+    return TEST_XLSX_DIR / "file_example_XLSX_1000.xlsx"
+
+
+@pytest.fixture
+def test_xlsx_dir() -> Path:
+    """Return path to test XLSX directory."""
+    return TEST_XLSX_DIR
+
+
+# String versions for parametrize (Excel)
+def get_xlsx_test_file() -> str:
+    """Get XLSX test file path as string."""
+    return str(TEST_XLSX_DIR / "file_example_XLSX_1000.xlsx")
+
+
+def get_large_xlsx_test_file() -> str:
+    """Get large XLSX test file path as string."""
+    return str(TEST_XLSX_DIR / "file_example_XLSX_5000.xlsx")
+
+
+def get_test_xlsx_dir() -> str:
+    """Get test XLSX directory path as string."""
+    return str(TEST_XLSX_DIR)
