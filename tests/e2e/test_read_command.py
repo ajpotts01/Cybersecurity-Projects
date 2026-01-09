@@ -118,3 +118,29 @@ def test_read_command_recursive_xlsx_success():
 
     assert result.exit_code == 0, f"Failed with: {result.stdout}"
     assert "Reading" in result.stdout
+
+
+# ============== PowerPoint Tests ==============
+
+
+def test_read_command_pptx_single_file_success():
+    """Test the 'read' command with a single PowerPoint file."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    result = runner.invoke(app, ["read", PPTX_TEST_FILE])
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    assert "Reading" in result.stdout
+    assert Path(PPTX_TEST_FILE).name in result.stdout
+
+
+def test_read_command_recursive_pptx_success():
+    """Test the 'read' command with recursive PowerPoint directory processing."""
+    from tests.conftest import get_test_pptx_dir
+
+    PPTX_DIR = get_test_pptx_dir()
+    result = runner.invoke(app, ["read", PPTX_DIR, "-r", "-ext", "pptx"])
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    assert "Reading" in result.stdout

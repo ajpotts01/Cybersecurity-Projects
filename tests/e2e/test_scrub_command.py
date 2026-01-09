@@ -209,3 +209,70 @@ def test_scrub_command_xlsx_with_workers(output_dir):
     )
 
     assert result.exit_code == 0, f"Failed with: {result.stdout}"
+
+
+# ============== PowerPoint Tests ==============
+
+
+def test_scrub_command_pptx_single_file_success(output_dir):
+    """Test the 'scrub' command with a single PowerPoint file."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    result = runner.invoke(app, ["scrub", PPTX_TEST_FILE, "--output", str(output_dir)])
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    output_file = output_dir / f"processed_{Path(PPTX_TEST_FILE).name}"
+    assert output_file.exists()
+
+
+def test_scrub_command_recursive_pptx_success(output_dir):
+    """Test the 'scrub' command with recursive directory processing for PowerPoint."""
+    from tests.conftest import get_test_pptx_dir
+
+    PPTX_DIR = get_test_pptx_dir()
+    result = runner.invoke(
+        app, ["scrub", PPTX_DIR, "-r", "-ext", "pptx", "--output", str(output_dir)]
+    )
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    output_files = list(output_dir.glob("processed_*.pptx"))
+    assert len(output_files) > 0
+
+
+def test_scrub_command_pptx_dry_run(output_dir):
+    """Test that --dry-run doesn't create PowerPoint files."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    result = runner.invoke(
+        app, ["scrub", PPTX_TEST_FILE, "--output", str(output_dir), "--dry-run"]
+    )
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"
+    assert "DRY-RUN" in result.stdout
+    output_file = output_dir / f"processed_{Path(PPTX_TEST_FILE).name}"
+    assert not output_file.exists()
+
+
+def test_scrub_command_pptx_with_workers(output_dir):
+    """Test the --workers option for concurrent PowerPoint processing."""
+    from tests.conftest import get_test_pptx_dir
+
+    PPTX_DIR = get_test_pptx_dir()
+    result = runner.invoke(
+        app,
+        [
+            "scrub",
+            PPTX_DIR,
+            "-r",
+            "-ext",
+            "pptx",
+            "--output",
+            str(output_dir),
+            "--workers",
+            "2",
+        ],
+    )
+
+    assert result.exit_code == 0, f"Failed with: {result.stdout}"

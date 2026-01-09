@@ -182,6 +182,66 @@ def test_excel_format_detection():
     assert handler._detect_format() == "xlsx"
 
 
+# ============== PowerPoint Tests ==============
+
+
+def test_read_pptx_metadata_via_factory():
+    """Test reading PowerPoint metadata through MetadataFactory."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    assert Path(PPTX_TEST_FILE).exists(), f"Test file not found: {PPTX_TEST_FILE}"
+
+    from src.services.powerpoint_handler import PowerpointHandler
+
+    handler = MetadataFactory.get_handler(PPTX_TEST_FILE)
+    assert isinstance(handler, PowerpointHandler)
+
+    metadata = handler.read()
+    assert handler.metadata == metadata
+    assert isinstance(metadata, dict)
+
+
+def test_wipe_pptx_metadata_via_factory():
+    """Test wiping PowerPoint metadata through MetadataFactory."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    handler = MetadataFactory.get_handler(PPTX_TEST_FILE)
+    handler.read()
+    handler.wipe()
+
+    assert handler.processed_metadata is not None
+
+
+def test_save_processed_pptx_metadata_via_factory():
+    """Test saving processed PowerPoint metadata through MetadataFactory."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    output_dir = Path("./tests/assets/output")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    handler = MetadataFactory.get_handler(PPTX_TEST_FILE)
+    handler.read()
+    handler.wipe()
+
+    output_file = output_dir / Path(PPTX_TEST_FILE).name
+    handler.save(str(output_file))
+
+    assert output_file.exists()
+    shutil.rmtree(output_dir)
+
+
+def test_pptx_format_detection():
+    """Test format detection for PowerPoint files."""
+    from tests.conftest import get_pptx_test_file
+
+    PPTX_TEST_FILE = get_pptx_test_file()
+    handler = MetadataFactory.get_handler(PPTX_TEST_FILE)
+    assert handler._detect_format() == "pptx"
+
+
 # ============== Error Tests ==============
 
 

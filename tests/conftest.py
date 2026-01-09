@@ -105,3 +105,35 @@ def get_large_xlsx_test_file() -> str:
 def get_test_xlsx_dir() -> str:
     """Get test XLSX directory path as string."""
     return str(TEST_XLSX_DIR)
+
+
+# PowerPoint fixtures
+TEST_PPTX_DIR = ASSETS_DIR / "test_pptx"
+
+
+@pytest.fixture
+def pptx_test_file() -> Path:
+    """Return path to a PPTX test file with metadata."""
+    return TEST_PPTX_DIR / "Extlst-test.pptx"
+
+
+@pytest.fixture
+def test_pptx_dir() -> Path:
+    """Return path to test PPTX directory."""
+    return TEST_PPTX_DIR
+
+
+# String versions for parametrize (PowerPoint)
+def get_pptx_test_file() -> str:
+    """Get PPTX test file path as string."""
+    return str(TEST_PPTX_DIR / "Extlst-test.pptx")
+
+
+def get_large_pptx_test_file() -> str:
+    """Get second PPTX test file path as string."""
+    return str(TEST_PPTX_DIR / "sample3.pptx")
+
+
+def get_test_pptx_dir() -> str:
+    """Get test PPTX directory path as string."""
+    return str(TEST_PPTX_DIR)
