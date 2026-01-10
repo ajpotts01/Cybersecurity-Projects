@@ -72,9 +72,9 @@ def verify(
         console.print()
         generator.render_table(report)
 
-        # # Exit with appropriate code
-        # if report.status == VerificationStatus.WARNING:
-        #     raise typer.Exit(code=1)
+        # Exit with appropriate code on warnings
+        if report.status == VerificationStatus.WARNING:
+            raise typer.Exit(code=1)
 
     except Exception as e:
         console.print(f"[red]Error during verification:[/red] {e}")
