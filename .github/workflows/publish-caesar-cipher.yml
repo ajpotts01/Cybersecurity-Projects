@@ -10,9 +10,9 @@ on:
     branches:
       - main
     paths:
-      - 'PROJECTS/caesar-cipher/**'
-      - '!PROJECTS/caesar-cipher/README.md'
-      - '!PROJECTS/caesar-cipher/Justfile'
+      - 'PROJECTS/beginner/caesar-cipher/**'
+      - '!PROJECTS/beginner/caesar-cipher/README.md'
+      - '!PROJECTS/beginner/caesar-cipher/Justfile'
 
 permissions:
   contents: read
@@ -41,10 +41,10 @@ jobs:
           pip install build
 
       - name: Build package
-        working-directory: PROJECTS/caesar-cipher
+        working-directory: PROJECTS/beginner/caesar-cipher
         run: python -m build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: PROJECTS/caesar-cipher/dist/
+          packages-dir: PROJECTS/beginner/caesar-cipher/dist/
