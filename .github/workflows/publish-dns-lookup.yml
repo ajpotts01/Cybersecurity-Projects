@@ -10,9 +10,9 @@ on:
     branches:
       - main
     paths:
-      - 'PROJECTS/dns-lookup/**'
-      - '!PROJECTS/dns-lookup/README.md'
-      - '!PROJECTS/dns-lookup/justfile'
+      - 'PROJECTS/beginner/dns-lookup/**'
+      - '!PROJECTS/beginner/dns-lookup/README.md'
+      - '!PROJECTS/beginner/dns-lookup/justfile'
 
 permissions:
   contents: read
@@ -41,10 +41,10 @@ jobs:
           pip install build
 
       - name: Build package
-        working-directory: PROJECTS/dns-lookup
+        working-directory: PROJECTS/beginner/dns-lookup
         run: python -m build
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: PROJECTS/dns-lookup/dist/
+          packages-dir: PROJECTS/beginner/dns-lookup/dist/

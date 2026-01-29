@@ -10,7 +10,7 @@ on:
     branches:
       - main
     paths:
-      - 'PROJECTS/api-rate-limiter/**'
+      - 'PROJECTS/advanced/api-rate-limiter/**'
 
 permissions:
   contents: read
