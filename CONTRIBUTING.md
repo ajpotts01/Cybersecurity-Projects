@@ -217,7 +217,7 @@ mypy your_module/
 
 **Code Formatting:**
 
-Format your code using the repository's custom YAPF configuration. Copy the [.style.yapf](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/.style.yapf) file and place it in the root of your project directory.
+Format your code using the repository's custom YAPF configuration. Copy the [.style.yapf](https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/TEMPLATES/.style.yapf) file and place it in the root of your project directory.
 ```bash
 yapf -i -r -vv your_project/
 ```
