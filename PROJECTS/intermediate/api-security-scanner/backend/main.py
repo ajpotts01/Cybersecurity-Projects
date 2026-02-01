@@ -1,5 +1,5 @@
 """
-ⒸCertGames.com | 2025
+ⒸCertGames.com | 2026
 ⒸAngelaMos | CarterPerez-dev
 ----
 API Security Scanner FastAPI entry point
