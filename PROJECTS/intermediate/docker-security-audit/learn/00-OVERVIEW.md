@@ -9,7 +9,186 @@ cmd/docksec/          Entry point and CLI commands
 internal/
   analyzer/           Security checks for different target types
   benchmark/          CIS Docker Benchmark control definitions
-  config/             Runtime configuration and constants
+  config/             Runtime configuration and constants# Docker Security Audit Tool (docksec)
+
+## What This Is
+
+A Go-based CLI tool that scans Docker environments for security misconfigurations and validates them against the CIS Docker Benchmark. It analyzes running containers, daemon settings, images, Dockerfiles, and docker-compose files to identify vulnerabilities like privileged containers, dangerous capabilities, Docker socket mounts, and hardcoded secrets.
+
+## Why This Matters
+
+Docker containers don't provide security by default. A single misconfiguration can give an attacker complete control over your host system. This tool catches those mistakes before they become breaches.
+
+**Real world scenarios where this applies:**
+
+- **Container escape via Docker socket mount**: In 2018, Tesla's Kubernetes cluster was compromised when attackers found a pod with `/var/run/docker.sock` mounted, letting them escape to the host and mine cryptocurrency.
+
+- **Privilege escalation through capabilities**: The 2014 "Shocker" exploit used `CAP_DAC_READ_SEARCH` to read arbitrary files from the host filesystem, bypassing container isolation completely.
+
+- **Secret exposure in images**: In 2019, over 100,000 Docker images on Docker Hub contained embedded API keys, passwords, and private keys discoverable through simple text searches.
+
+## What You'll Learn
+
+This project teaches you how container security actually works under the hood. By building and extending it, you'll understand:
+
+**Security Concepts:**
+- **CIS Docker Benchmark compliance** - industry standard security controls covering host config, daemon settings, images, and runtime. You'll learn which of the 100+ controls matter most and why.
+- **Linux capabilities model** - how the 41 discrete privileges work, which ones enable container escape (like `CAP_SYS_ADMIN` and `CAP_SYS_PTRACE`), and how to audit them programmatically.
+- **Namespace isolation boundaries** - what PID, network, IPC, and mount namespaces protect against, and how sharing host namespaces breaks that protection.
+- **Security profiles (seccomp, AppArmor, SELinux)** - how syscall filtering and mandatory access control actually prevent attacks, not just theoretical defense-in-depth concepts.
+- **Secret detection techniques** - pattern matching with regex, entropy analysis using Shannon entropy, and why both are needed to catch different types of leaked credentials.
+
+**Technical Skills:**
+- **Docker API interaction** - using the official Docker client library to introspect containers, images, and daemon configuration without shell commands.
+- **Static analysis of build files** - parsing Dockerfiles with AST (abstract syntax tree) to detect security issues at build time, before images ever run.
+- **Concurrent scanning** - using Go's errgroup and rate limiters to scan hundreds of containers efficiently without overwhelming the daemon.
+- **Security reporting formats** - generating SARIF (Static Analysis Results Interchange Format) for GitHub Security, JUnit for CI/CD, and structured JSON for automation.
+
+**Tools and Techniques:**
+- **moby/buildkit parser** - the same parser Docker uses to understand Dockerfile syntax, giving you access to instruction metadata and line numbers for precise findings.
+- **CIS Benchmark mapping** - translating security controls into automated checks, including determining which findings are "scored" vs "not scored" in compliance reporting.
+- **YAML node traversal** - navigating docker-compose files as structured data rather than text, handling both mapping and sequence formats for the same logical configuration.
+
+## Prerequisites
+
+Before starting, you should understand:
+
+**Required knowledge:**
+- **Go basics** - structs, interfaces, goroutines, channels. You'll be reading and modifying Go code that uses errgroups for concurrency and rate limiters for API throttling.
+- **Docker fundamentals** - images vs containers, how volumes work, what ports do. You need to know the difference between `docker run --privileged` and `--cap-add=NET_ADMIN`.
+- **Linux security model** - what root can do, basic permission concepts, why running as UID 0 is dangerous. Understanding `/proc` and `/sys` helps but isn't required.
+- **Command line proficiency** - comfortable with `docker inspect`, reading JSON output, understanding exit codes and stderr vs stdout.
+
+**Tools you'll need:**
+- **Go 1.23+** - the project uses generics and newer error handling patterns
+- **Docker Engine** - running locally or accessible via `DOCKER_HOST`. Docker Desktop on Mac/Windows works fine.
+- **Make** (optional) - for running build and test commands conveniently
+- **Git** - to clone the repository and track your changes
+
+**Helpful but not required:**
+- Experience with security scanning tools like Trivy, Snyk, or Anchore
+- Familiarity with the CIS Benchmark PDFs (the tool teaches you the controls)
+- Knowledge of Go testing and benchmarking
+
+## Quick Start
+
+Get the project running locally:
+
+```bash
+# Clone and navigate
+cd PROJECTS/intermediate/docker-security-audit
+
+# Build the binary
+go build -o docksec ./cmd/docksec
+
+# Scan all running containers
+./docksec scan
+
+# Scan specific targets
+./docksec scan --target containers
+./docksec scan --target daemon
+./docksec scan --target images
+
+# Scan a Dockerfile
+./docksec scan --file Dockerfile
+
+# Scan a docker-compose file
+./docksec scan --file docker-compose.yml
+
+# Generate JSON output for automation
+./docksec scan --output json --output-file results.json
+
+# Generate SARIF for GitHub Security
+./docksec scan --output sarif --output-file results.sarif
+
+# Filter by severity
+./docksec scan --severity high,critical
+
+# Fail CI builds on findings
+./docksec scan --fail-on medium
+```
+
+Expected output: Terminal report grouped by category (Container Runtime, Docker Daemon, etc.) showing findings with severity levels, CIS control IDs, descriptions, and remediation steps. Zero findings if your Docker environment is properly secured.
+
+## Project Structure
+
+```
+docker-security-audit/
+├── cmd/
+│   └── docksec/
+│       └── main.go              # CLI entry point, Cobra commands
+├── internal/
+│   ├── analyzer/
+│   │   ├── analyzer.go          # Analyzer interface
+│   │   ├── container.go         # Running container checks
+│   │   ├── daemon.go            # Docker daemon config checks
+│   │   ├── image.go             # Image metadata checks
+│   │   ├── dockerfile.go        # Dockerfile static analysis
+│   │   └── compose.go           # docker-compose.yml checks
+│   ├── benchmark/
+│   │   └── controls.go          # CIS Docker Benchmark control registry
+│   ├── config/
+│   │   ├── config.go            # Configuration struct and filters
+│   │   └── constants.go         # Rate limits, timeouts, thresholds
+│   ├── docker/
+│   │   └── client.go            # Docker API client wrapper
+│   ├── finding/
+│   │   └── finding.go           # Finding data model and collection
+│   ├── proc/
+│   │   ├── capabilities.go      # Linux capabilities parsing
+│   │   ├── proc.go              # /proc filesystem reading
+│   │   └── security.go          # Security profile inspection
+│   ├── report/
+│   │   ├── reporter.go          # Reporter interface and factory
+│   │   ├── terminal.go          # Human-readable output
+│   │   ├── json.go              # Structured JSON output
+│   │   ├── sarif.go             # SARIF 2.1.0 format
+│   │   └── junit.go             # JUnit XML for CI/CD
+│   ├── rules/
+│   │   ├── capabilities.go      # 41 Linux capabilities with risk levels
+│   │   ├── paths.go             # 200+ sensitive host paths
+│   │   └── secrets.go           # 80+ secret patterns and entropy
+│   └── scanner/
+│       └── scanner.go           # Main scan orchestration
+├── Dockerfile                   # Multi-stage build for container deployment
+├── go.mod                       # Dependencies
+└── go.sum
+```
+
+## Next Steps
+
+1. **Understand the concepts** - Read [01-CONCEPTS.md](./01-CONCEPTS.md) to learn how Linux capabilities, namespaces, and security profiles actually work at the kernel level.
+
+2. **Study the architecture** - Read [02-ARCHITECTURE.md](./02-ARCHITECTURE.md) to see how the scanner orchestrates concurrent analyzers, applies rules, and generates findings.
+
+3. **Walk through the code** - Read [03-IMPLEMENTATION.md](./03-IMPLEMENTATION.md) for detailed implementation walkthroughs with actual code from the project.
+
+4. **Extend the project** - Read [04-CHALLENGES.md](./04-CHALLENGES.md) for specific ideas to add features like runtime monitoring, Kubernetes integration, and custom policies.
+
+## Common Issues
+
+**Docker daemon not accessible**
+```
+Error: docker daemon not accessible: Cannot connect to the Docker daemon
+```
+Solution: Check that Docker is running (`docker ps` works), your user is in the `docker` group, or set `DOCKER_HOST` if using remote Docker.
+
+**No findings on known vulnerable containers**
+Solution: Check your `--severity` and `--target` flags. The default scans all targets at all severities. Use `--verbose` to see which analyzers run.
+
+**Build fails with "module not found"**
+Solution: Run `go mod download` to fetch dependencies. Make sure you're using Go 1.23 or later (`go version`).
+
+**SARIF file not showing in GitHub Security**
+Solution: Upload it in a GitHub Actions workflow using `github/codeql-action/upload-sarif@v2`. SARIF files don't auto-upload, they need explicit CI integration.
+
+## Related Projects
+
+If you found this interesting, check out:
+
+- **Trivy** - comprehensive vulnerability scanner that includes configuration scanning. This project focuses specifically on runtime and build-time Docker security.
+- **Falco** - runtime security monitoring using eBPF. Complements this tool by detecting threats during execution.
+- **Docker Bench Security** - official Docker security checker. This project improves on it with structured output, CI/CD integration, and programmatic access.
   docker/             Docker SDK wrapper
   finding/            The Finding type and severity levels
   parser/             Dockerfile and compose file parsers

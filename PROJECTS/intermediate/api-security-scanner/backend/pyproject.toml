@@ -1,12 +1,11 @@
 [project]
 name = "api-security-scanner-backend"
-version = "1.0.0"
+version = "1.0.1"
 description = "Backend API for security testing tool"
-requires-python = ">=3.11"
-authors = [ # Replace my Name & Email Here
+requires-python = ">=3.13"
+authors = [
     {name = "CarerPerez-dev", email = "support@certgames.com"}
 ]
-readme = "README.md"
 license = {text = "MIT"}
 
 dependencies = [
@@ -17,7 +16,7 @@ dependencies = [
     # Database
     "sqlalchemy==2.0.46",
     "psycopg2-binary==2.9.11",
-    "alembic==1.18.1",
+    "alembic>=1.18.3",
     # Security
     "slowapi==0.1.9",
     "python-jose[cryptography]==3.5.0",
@@ -68,7 +67,7 @@ packages = [
 ]
 
 [tool.ruff]
-target-version = "py311"
+target-version = "py313"
 line-length = 95
 indent-width = 4
 exclude = [
@@ -136,7 +135,7 @@ ignore = [
 
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.13"
 mypy_path = "backend"
 namespace_packages = true
 explicit_package_bases = true
@@ -190,7 +189,7 @@ disable_error_code = [
 
 
 [tool.pylint.main]
-py-version = "3.11"
+py-version = "3.13"
 jobs = 4
 load-plugins = [
     "pylint_pydantic",

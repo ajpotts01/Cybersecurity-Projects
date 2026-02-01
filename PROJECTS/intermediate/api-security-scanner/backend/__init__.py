@@ -1,6 +1,6 @@
 """
 ⒸAngelaMos | CarterPerez-dev
-ⒸCertGames.com | 2025
+ⒸCertGames.com | 2026
 ----
 API Security Scanner
 

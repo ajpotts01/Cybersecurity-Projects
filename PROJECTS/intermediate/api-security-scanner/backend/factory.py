@@ -1,5 +1,5 @@
 """
-ⒸAngelaMos | 2025
+ⒸAngelaMos | 2026
 FastAPI application factory for main.py
 """
 
@@ -76,3 +76,4 @@ def _register_routes(app: FastAPI) -> None:
 
     app.include_router(auth_router)
     app.include_router(scans_router)
+    
