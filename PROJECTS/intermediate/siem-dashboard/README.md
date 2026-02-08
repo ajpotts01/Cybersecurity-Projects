@@ -12,19 +12,18 @@ A full-stack Security Information and Event Management dashboard with a built-in
 
 Real-time overview of ingested events, active alerts, severity distribution, and top source IPs.
 
-![Dashboard](docs/images/dashboard.png)
+![Log Viewer](assets/images/log-viewer.png)
 
 ## Log Viewer
 
 Paginated, filterable log table showing every event ingested by the system — firewall, auth, IDS, endpoint, DNS, and proxy logs. Click any row to inspect the full normalized payload.
 
-![Log Viewer](docs/images/log-viewer.png)
-
+![Dashboard](assets/images/dashboard.png)
 ## Alerts
 
 Alerts fire when correlation rules detect suspicious patterns in the event stream. Each alert shows the matched rule, severity, status, grouped source, and the specific events that triggered it. Analysts can acknowledge, investigate, resolve, or mark as false positive.
 
-![Alerts](docs/images/alerts.png)
+![Alerts](assets/images/alerts.png)
 
 ## Correlation Rules
 
@@ -34,7 +33,7 @@ Define detection logic using three rule types:
 - **Sequence** — fire when an ordered series of event patterns appears (e.g. failed logins followed by a success)
 - **Aggregation** — fire when distinct values of a field exceed a threshold (e.g. one IP hitting 10+ ports)
 
-![Rules](docs/images/rules.png)
+![Rules](docs/assets/rules.png)
 
 ## Scenario Engine
 
@@ -88,9 +87,9 @@ YAML Playbook ──→ Scenario Thread (replays events with timing)
 ## Quick Start
 
 ```bash
-git clone <repo-url>
-cd siem-dashboard
-docker compose -f dev.compose.yml up --build
+git clone https://github.com/CarterPerez-dev/Cybersecurity-Projects
+cd PROJECTS/intermediate/siem-dashboard
+Just dev-up
 ```
 
 - **App:** http://localhost:8431
