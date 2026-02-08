@@ -1,0 +1,75 @@
+"""
+©AngelaMos | 2026
+scenario_ctrl.py
+"""
+
+from typing import Any
+
+from flask import g
+
+from app.models.ScenarioRun import ScenarioRun
+from app.scenarios.playbook import Playbook
+from app.scenarios.runner import ScenarioRunner
+
+
+def list_available() -> list[dict[str, Any]]:
+    """
+    Return metadata for all available playbook files
+    """
+    return Playbook.list_available()
+
+
+def list_running() -> list[Any]:
+    """
+    Return all active scenario runs
+    """
+    return ScenarioRun.get_active_runs()
+
+
+def start_scenario() -> ScenarioRun:
+    """
+    Load a playbook and start a new scenario thread
+    """
+    data = g.validated
+    return ScenarioRunner.start(data.filename)
+
+
+def stop_scenario(run_id: str) -> ScenarioRun:
+    """
+    Stop an active scenario run
+    """
+    run = ScenarioRun.get_by_id(run_id)
+    ScenarioRunner.stop(str(run.id))
+    run.reload()  # type: ignore[no-untyped-call]
+    return run
+
+
+def pause_scenario(run_id: str) -> ScenarioRun:
+    """
+    Pause an active scenario run
+    """
+    run = ScenarioRun.get_by_id(run_id)
+    ScenarioRunner.pause(str(run.id))
+    run.reload()  # type: ignore[no-untyped-call]
+    return run
+
+
+def resume_scenario(run_id: str) -> ScenarioRun:
+    """
+    Resume a paused scenario run
+    """
+    run = ScenarioRun.get_by_id(run_id)
+    ScenarioRunner.resume(str(run.id))
+    run.reload()  # type: ignore[no-untyped-call]
+    return run
+
+
+def set_speed(run_id: str) -> ScenarioRun:
+    """
+    Adjust the playback speed of an active scenario
+    """
+    data = g.validated
+    run = ScenarioRun.get_by_id(run_id)
+    ScenarioRunner.set_speed(str(run.id), data.speed)
+    run.reload()  # type: ignore[no-untyped-call]
+    return run
