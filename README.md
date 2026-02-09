@@ -23,7 +23,7 @@
 <h2 align="center"><strong>View Complete Projects:</strong></h2>
 <div align="center">
   <a href="https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS">
-    <img src="https://img.shields.io/badge/Full_Source_Code-12/60-blue?style=for-the-badge&logo=github" alt="Projects"/>
+    <img src="https://img.shields.io/badge/Full_Source_Code-13/60-blue?style=for-the-badge&logo=github" alt="Projects"/>
   </a>
 </div>
 
@@ -74,7 +74,7 @@ Tools, courses, certifications, communities, and frameworks for cybersecurity pr
 | Project | Info | What You'll Learn |
 |---------|------|-------------------|
 | **[Reverse Shell Handler](./SYNOPSES/intermediate/Reverse.Shell.Handler.md)**<br>Multi-client shell server | ![2-4d](https://img.shields.io/badge/⏱️_2--4d-blue) ![Go](https://img.shields.io/badge/Go-00ADD8?logo=go&logoColor=white) ![Intermediate](https://img.shields.io/badge/●_Intermediate-yellow) | Socket programming • Command execution • File transfer<br>[Learn More](./SYNOPSES/intermediate/Reverse.Shell.Handler.md) |
-| **[SIEM Dashboard](./SYNOPSES/intermediate/SIEM.Dashboard.md)**<br>Log aggregation with correlation | ![3-5d](https://img.shields.io/badge/⏱️_3--5d-blue) ![Flask](https://img.shields.io/badge/Flask-000000?logo=flask) ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![Intermediate](https://img.shields.io/badge/●_Intermediate-yellow) | SIEM concepts • Log correlation • Full-stack development<br>[Learn More](./SYNOPSES/intermediate/SIEM.Dashboard.md) |
+| **[SIEM Dashboard](./SYNOPSES/intermediate/SIEM.Dashboard.md)**<br>Log aggregation with correlation | ![3-5d](https://img.shields.io/badge/⏱️_3--5d-blue) ![Flask](https://img.shields.io/badge/Flask-000000?logo=flask) ![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black) ![Intermediate](https://img.shields.io/badge/●_Intermediate-yellow) | SIEM concepts • Log correlation • Full-stack development<br>[Source Code](./PROJECTS/intermediate/siem-dashboard) \| [Docs](./PROJECTS/intermediate/siem-dashboard/learn) |
 | **[Threat Intelligence Aggregator](./SYNOPSES/intermediate/Threat.Intelligence.Aggregator.md)**<br>Collect and enrich IOCs | ![2-4d](https://img.shields.io/badge/⏱️_2--4d-blue) ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) ![Intermediate](https://img.shields.io/badge/●_Intermediate-yellow) | Threat feeds • IOC enrichment • API integration<br>[Learn More](./SYNOPSES/intermediate/Threat.Intelligence.Aggregator.md) |
 | **[OAuth Token Analyzer](./SYNOPSES/intermediate/OAuth.Token.Analyzer.md)**<br>Decode and validate JWT | ![2-4d](https://img.shields.io/badge/⏱️_2--4d-blue) ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) ![Intermediate](https://img.shields.io/badge/●_Intermediate-yellow) | JWT tokens • OAuth vulnerabilities • Signature validation<br>[Learn More](./SYNOPSES/intermediate/OAuth.Token.Analyzer.md) |
 | **[Web Vulnerability Scanner](./SYNOPSES/intermediate/Web.Vulnerability.Scanner.md)**<br>Automated XSS, SQLi, CSRF testing | ![3-5d](https://img.shields.io/badge/⏱️_3--5d-blue) ![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white) ![Intermediate](https://img.shields.io/badge/●_Intermediate-yellow) | Web vulnerabilities • Async scanning • Plugin architecture<br>[Learn More](./SYNOPSES/intermediate/Web.Vulnerability.Scanner.md) |
