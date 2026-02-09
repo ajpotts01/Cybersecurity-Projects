@@ -1,0 +1,50 @@
+# =============================================================================
+# AngelaMos | 2026
+# publish-base64-tool.yml
+# =============================================================================
+
+name: Publish b64tool to PyPI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'PROJECTS/beginner/base64-tool/**'
+      - '!PROJECTS/beginner/base64-tool/README.md'
+      - '!PROJECTS/beginner/base64-tool/Justfile'
+
+permissions:
+  contents: read
+
+jobs:
+  pypi-publish:
+    name: Upload b64tool to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/b64tool
+    permissions:
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build package
+        working-directory: PROJECTS/beginner/base64-tool
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: PROJECTS/beginner/base64-tool/dist/
