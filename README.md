@@ -27,6 +27,8 @@
   </a>
 </div>
 
+<p align="center"><sub><em>Currently building: <a href="./SYNOPSES/advanced/AI.Threat.Detection.md">AI Threat Detection</a></em></sub></p>
+
 ---
 
 ## Quick Navigation
