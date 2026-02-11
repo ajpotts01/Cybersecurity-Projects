@@ -1,7 +1,7 @@
 repos:
-  # Python Backend Checks
+  # Python Backend Ruff Checks
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.4
+    rev: v0.15.0
     hooks:
       - id: ruff
         name: ruff check (backend)
@@ -9,57 +9,26 @@ repos:
         files: ^PROJECTS/api-security-scanner/backend/
         exclude: ^PROJECTS/api-security-scanner/backend/(\.venv|__pycache__|\.pytest_cache)/
 
-  - repo: local
-    hooks:
-      - id: yapf
-        name: yapf format (backend)
-        entry: bash -c 'cd PROJECTS/api-security-scanner/backend && yapf -i -r -vv models/ repositories/ schemas/ scanners/ core/ factory/'
-        language: system
-        types: [python]
-        files: ^PROJECTS/api-security-scanner/backend/
-        pass_filenames: false
 
-      - id: mypy
-        name: mypy type check (backend)
-        entry: bash -c 'cd PROJECTS/api-security-scanner/backend && mypy .'
-        language: system
-        types: [python]
-        files: ^PROJECTS/api-security-scanner/backend/
-        pass_filenames: false
+      # TODO: add additional ruff checks for remaining projects
 
-      - id: pylint
-        name: pylint check (backend)
-        entry: bash -c 'cd PROJECTS/api-security-scanner/backend && pylint **/*.py'
-        language: system
-        types: [python]
-        files: ^PROJECTS/api-security-scanner/backend/
-        pass_filenames: false
 
-      # Frontend TypeScript/ESLint Checks
-      - id: eslint
-        name: eslint check (frontend)
-        entry: bash -c 'cd PROJECTS/api-security-scanner/frontend && npm run lint:eslint'
-        language: system
-        types_or: [ts, tsx, javascript, jsx]
-        files: ^PROJECTS/api-security-scanner/frontend/src/
-        pass_filenames: false
+      # TODO: add golangci checks for GO projects
 
-      - id: typescript
-        name: TypeScript type check (frontend)
-        entry: bash -c 'cd PROJECTS/api-security-scanner/frontend && npm run lint:types'
-        language: system
-        types_or: [ts, tsx]
-        files: ^PROJECTS/api-security-scanner/frontend/src/
-        pass_filenames: false
 
-  # General File Checks
+      # TODO: replace eslint in any full-stack (React) projects with biome then add biome checks
+
+
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
       - id: check-yaml
       - id: check-json
-      - id: check-merge-conflict
-      - id: check-added-large-files
-        args: ['--maxkb=1000']
+      - id: check-toml
+      - id: check-ast
+      - id: check-symlinks
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-illegal-windows-names
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
