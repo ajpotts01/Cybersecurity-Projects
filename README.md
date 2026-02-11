@@ -126,3 +126,8 @@ Tools, courses, certifications, communities, and frameworks for cybersecurity pr
 **[Certification Roadmaps](./ROADMAPS/README.md)** - Career paths for SOC Analyst, Pentester, Security Engineer, GRC Analyst, and 6 more tracks
 
 **[Learning Resources](./RESOURCES/README.md)** - Tools, courses, certifications, YouTube channels, Reddit communities, and security frameworks
+
+
+## License
+
+AGPL 3.0
