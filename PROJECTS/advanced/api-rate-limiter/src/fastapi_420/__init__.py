@@ -70,7 +70,7 @@ from fastapi_420.types import (
 )
 
 
-__version__ = "0.1.0"
+__version__ = "1.0.1"
 
 __all__ = [
     "HTTP_420_ENHANCE_YOUR_CALM",

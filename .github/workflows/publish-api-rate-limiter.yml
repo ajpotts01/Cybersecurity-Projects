@@ -1,29 +1,31 @@
 # =============================================================================
 # AngelaMos | 2026
-# publish-dns-lookup.yml
+# publish-api-rate-limiter.yml
 # =============================================================================
 
-name: Publish dns-lookup to PyPI
+name: Publish api-rate-limiter to PyPI
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'PROJECTS/beginner/dns-lookup/**'
-      - '!PROJECTS/beginner/dns-lookup/README.md'
-      - '!PROJECTS/beginner/dns-lookup/justfile'
+      - 'PROJECTS/advanced/api-rate-limiter/**'
+      - '!PROJECTS/advanced/api-rate-limiter/README.md'
+      - '!PROJECTS/advanced/api-rate-limiter/justfile'
+      - '!PROJECTS/advanced/api-rate-limiter/learn/**'
+      - '!PROJECTS/advanced/api-rate-limiter/examples/**'
 
 permissions:
   contents: read
 
 jobs:
   pypi-publish:
-    name: Upload dns-lookup to PyPI
+    name: Upload api-rate-limiter to PyPI
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/dnslookup-cli
+      url: https://pypi.org/p/fastapi-420
     permissions:
       id-token: write
     steps:
@@ -33,20 +35,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.14"
 
       - name: Check if version exists on PyPI
         id: version_check
-        working-directory: PROJECTS/beginner/dns-lookup
+        working-directory: PROJECTS/advanced/api-rate-limiter
         run: |
           VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/dnslookup-cli/${VERSION}/json")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/fastapi-420/${VERSION}/json")
           if [ "$STATUS" = "200" ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
-            echo "::notice::dnslookup-cli v${VERSION} already on PyPI — skipping publish"
+            echo "::notice::fastapi-420 v${VERSION} already on PyPI — skipping publish"
           else
             echo "exists=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::dnslookup-cli v${VERSION} not on PyPI — publishing"
+            echo "::notice::fastapi-420 v${VERSION} not on PyPI — publishing"
           fi
 
       - name: Install build dependencies
@@ -57,11 +59,11 @@ jobs:
 
       - name: Build package
         if: steps.version_check.outputs.exists != 'true'
-        working-directory: PROJECTS/beginner/dns-lookup
+        working-directory: PROJECTS/advanced/api-rate-limiter
         run: python -m build
 
       - name: Publish to PyPI
         if: steps.version_check.outputs.exists != 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: PROJECTS/beginner/dns-lookup/dist/
+          packages-dir: PROJECTS/advanced/api-rate-limiter/dist/

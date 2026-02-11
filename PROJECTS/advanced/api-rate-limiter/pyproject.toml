@@ -1,10 +1,10 @@
 [project]
 name = "fastapi-420"
-version = "0.1.0"
+version = "1.0.1"
 description = "Enhance Your Calm - Advanced Rate Limiting & DDoS Protection for FastAPI"
 readme = "README.md"
 license = {text = "MIT"}
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 keywords = ["fastapi", "rate-limiting", "ddos", "security", "api", "420"]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -16,42 +16,43 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Security",
     "Typing :: Typed",
 ]
 
 dependencies = [
-    "fastapi[standard]>=0.123.0,<1.0.0",
+    "fastapi[standard]>=0.128.7",
     "pydantic>=2.12.5,<3.0.0",
     "pydantic-settings>=2.12.0,<3.0.0",
-    "redis>=7.1.0",
-    "pyjwt>=2.10.0",
+    "redis>=7.1.1",
+    "pyjwt>=2.11.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
-    "pytest-cov>=6.0.0",
+    "pytest-cov>=7.0.0",
     "httpx>=0.28.1",
-    "fakeredis>=2.26.0",
-    "time-machine>=2.16.0",
+    "fakeredis>=2.33.0",
+    "time-machine>=3.2.0",
     "asgi-lifespan>=2.1.0",
-    "mypy>=1.19.0",
-    "types-redis>=4.6.0",
-    "ruff>=0.14.8",
+    "mypy>=1.19.1",
+    "types-redis>=4.6.0.20241004",
+    "ruff>=0.15.0",
     "pylint>=4.0.4",
     "pylint-pydantic>=0.4.1",
     "pylint-per-file-ignores>=3.2.0",
-    "pre-commit>=4.2.0",
+    "pre-commit>=4.5.1",
 ]
 
 [project.urls]
-Homepage = "https://github.com/CarterPerez-dev/fastapi-420"
-Documentation = "https://github.com/CarterPerez-dev/fastapi-420#readme"
-Repository = "https://github.com/CarterPerez-dev/fastapi-420"
-Issues = "https://github.com/CarterPerez-dev/fastapi-420/issues"
+Homepage = "https://github.com/CarterPerez-dev/Cybersecurity-Projects"
+Documentation = "https://github.com/CarterPerez-dev/Cybersecurity-Projects/blob/main/PROJECTS/advanced/api-rate-limiter/examples/USAGE.md"
+Repository = "https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/advanced/api-rate-limiter"
+Issues = "https://github.com/CarterPerez-dev/Cybersecurity-Projects/issues"
 
 
 [build-system]
@@ -62,7 +63,7 @@ build-backend = "hatchling.build"
 packages = ["src/fastapi_420"]
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 line-length = 88
 src = ["src"]
 exclude = ["alembic"]
@@ -100,7 +101,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.14"
 strict = true
 warn_return_any = true
 warn_unused_ignores = true
@@ -136,7 +137,7 @@ warn_required_dynamic_aliases = true
 
 
 [tool.pylint.main]
-py-version = "3.11"
+py-version = "3.14"
 jobs = 4
 load-plugins = [
     "pylint_pydantic",
@@ -229,7 +230,7 @@ exclude = ["alembic/versions/**", ".venv/**"]
 respect-ignore-files = true
 
 [tool.ty.environment]
-python-version = "3.12"
+python-version = "3.14"
 root = ["./src"]
 python = "./.venv"
 
