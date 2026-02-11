@@ -1,283 +1,66 @@
-# fastapi-420
-
-Production rate limiting for FastAPI. Uses HTTP code 420 "Enhance Your Calm" because 429 is boring.
-
-## Installation
-
-```bash
-pip install fastapi-420
+```ruby
+███████╗ █████╗ ███████╗████████╗ █████╗ ██████╗ ██╗     ██╗  ██╗██████╗  ██████╗
+██╔════╝██╔══██╗██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██║     ██║  ██║╚════██╗██╔═████╗
+█████╗  ███████║███████╗   ██║   ███████║██████╔╝██║     ███████║ █████╔╝██║██╔██║
+██╔══╝  ██╔══██║╚════██║   ██║   ██╔══██║██╔═══╝ ██║     ╚════██║██╔═══╝ ████╔╝██║
+██║     ██║  ██║███████║   ██║   ██║  ██║██║     ██║          ██║███████╗╚██████╔╝
+╚═╝     ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝          ╚═╝╚══════╝ ╚═════╝
 ```
 
-For Redis support:
+[![Cybersecurity Projects](https://img.shields.io/badge/Cybersecurity--Projects-Project%20%235-red?style=flat&logo=github)](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/advanced/api-rate-limiter)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3-purple.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![PyPI](https://img.shields.io/pypi/v/fastapi-420?color=3775A9&logo=pypi&logoColor=white)](https://pypi.org/project/fastapi-420/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-compatible-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 
-```bash
-pip install fastapi-420[redis]
-```
+> Production rate limiting for FastAPI using HTTP 420 "Enhance Your Calm".
+
+*This is a quick overview — security theory, architecture, and full walkthroughs are in the [learn modules](#learn).*
+
+## What It Does
+
+- Three implementation methods: middleware (global), decorator (per route), dependency injection
+- Sliding Window, Token Bucket, and Fixed Window rate limiting algorithms
+- Redis support with automatic in-memory fallback when Redis is unavailable
+- Scoped rate limiters for applying different limits to endpoint groups
+- Fingerprint levels (RELAXED, NORMAL, STRICT) for client identification granularity
+- Multiple stacking rules where the most restrictive limit applies
 
 ## Quick Start
 
-Three ways to add rate limiting. Pick what fits your app.
-
-### Middleware (global)
-
-Limits all routes automatically.
+```bash
+uv add fastapi-420
+```
 
 ```python
 from fastapi import FastAPI
-from fastapi_420 import RateLimiter, RateLimitMiddleware
+from fastapi_420 import RateLimiter, RateLimiterSettings
 
 app = FastAPI()
-limiter = RateLimiter()
-
-app.add_middleware(
-    RateLimitMiddleware,
-    limiter=limiter,
-    default_limit="100/minute",
-)
-
-@app.get("/")
-async def root():
-    return {"message": "hello"}
+limiter = RateLimiter(RateLimiterSettings(default_limit="100/minute"))
+app.add_middleware(limiter.middleware)
 ```
 
-### Decorator (per route)
+For Redis support: `uv add fastapi-420[redis]`
 
-Fine grained control on specific endpoints.
+> [!TIP]
+> This project uses [`just`](https://github.com/casey/just) as a command runner. Type `just` to see all available commands.
+>
+> Install: `curl -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin`
 
-```python
-from fastapi import FastAPI, Request
-from fastapi_420 import RateLimiter
+## Learn
 
-app = FastAPI()
-limiter = RateLimiter()
+This project includes step-by-step learning materials covering security theory, architecture, and implementation.
 
-@app.get("/search")
-@limiter.limit("30/minute")
-async def search(request: Request, q: str):
-    return {"results": []}
+| Module | Topic |
+|--------|-------|
+| [00 - Overview](learn/00-OVERVIEW.md) | Prerequisites and quick start |
+| [01 - Concepts](learn/01-CONCEPTS.md) | Security theory and real-world breaches |
+| [02 - Architecture](learn/02-ARCHITECTURE.md) | System design and data flow |
+| [03 - Implementation](learn/03-IMPLEMENTATION.md) | Code walkthrough |
+| [04 - Challenges](learn/04-CHALLENGES.md) | Extension ideas and exercises |
 
-@app.post("/upload")
-@limiter.limit("5/minute", "20/hour")
-async def upload(request: Request):
-    return {"status": "ok"}
-```
-
-### Dependency (FastAPI style)
-
-Works with FastAPI's dependency injection.
-
-```python
-from fastapi import FastAPI, Depends
-from fastapi_420 import RateLimiter, RateLimitDep, set_global_limiter
-
-app = FastAPI()
-limiter = RateLimiter()
-set_global_limiter(limiter)
-
-@app.get("/api/data", dependencies=[Depends(RateLimitDep("50/minute"))])
-async def get_data():
-    return {"data": []}
-```
-
-## Common Patterns
-
-### Different limits for different endpoints
-
-Auth endpoints get strict limits. Public endpoints stay relaxed.
-
-```python
-from fastapi_420 import ScopedRateLimiter
-
-auth_limiter = ScopedRateLimiter(
-    prefix="/auth",
-    default_rules=["5/minute"],
-    endpoint_rules={
-        "POST:/auth/login": ["3/minute", "10/hour"],
-        "POST:/auth/register": ["2/minute"],
-    },
-)
-
-@app.post("/auth/login", dependencies=[Depends(auth_limiter)])
-async def login():
-    ...
-```
-
-### Using Redis
-
-Memory storage works fine for single instances. Redis for distributed apps.
-
-```python
-from fastapi_420 import RateLimiter, RateLimiterSettings, StorageSettings
-
-settings = RateLimiterSettings(
-    storage=StorageSettings(
-        REDIS_URL="redis://localhost:6379/0",
-    ),
-)
-
-limiter = RateLimiter(settings=settings)
-```
-
-If Redis goes down, the limiter falls back to memory automatically.
-
-### Trusting proxy headers
-
-Behind nginx or a load balancer? Trust the forwarded headers.
-
-```python
-from fastapi_420 import FingerprintSettings, RateLimiterSettings
-
-settings = RateLimiterSettings(
-    fingerprint=FingerprintSettings(
-        TRUST_X_FORWARDED_FOR=True,
-    ),
-)
-```
-
-### Custom identification
-
-Rate limit by user ID instead of IP.
-
-```python
-def get_user_id(request):
-    return request.state.user_id or request.client.host
-
-@app.get("/api/resource")
-@limiter.limit("100/minute", key_func=get_user_id)
-async def resource(request: Request):
-    ...
-```
-
-## Configuration Reference
-
-All settings with their defaults.
-
-### RateLimiterSettings
-
-```python
-from fastapi_420 import RateLimiterSettings
-from fastapi_420.types import Algorithm
-
-RateLimiterSettings(
-    # Algorithm
-    ALGORITHM=Algorithm.SLIDING_WINDOW,  # SLIDING_WINDOW | TOKEN_BUCKET | FIXED_WINDOW
-
-    # Defaults applied when no rules specified
-    DEFAULT_LIMIT="100/minute",
-    DEFAULT_LIMITS=["100/minute"],       # list form, multiple rules
-
-    # Storage key configuration
-    KEY_PREFIX="rl",
-    KEY_VERSION="v1",
-
-    # Response behavior
-    INCLUDE_HEADERS=True,                # add RateLimit-* headers
-    HTTP_420_MESSAGE="Enhance Your Calm",
-    HTTP_420_DETAIL={"error": "rate_limit_exceeded", "message": "Enhance Your Calm"},
-
-    # Failure handling
-    FAIL_OPEN=True,                      # allow requests if storage fails
-    LOG_VIOLATIONS=True,                 # log when limits exceeded
-
-    # Nested settings (see below)
-    storage=StorageSettings(...),
-    fingerprint=FingerprintSettings(...),
-)
-```
-
-### StorageSettings
-
-```python
-from fastapi_420 import StorageSettings
-
-StorageSettings(
-    # Redis (optional, falls back to memory if not set or unavailable)
-    REDIS_URL=None,                      # "redis://localhost:6379/0"
-    REDIS_KEY_PREFIX="rl",
-    REDIS_SOCKET_TIMEOUT=5.0,
-    REDIS_SOCKET_CONNECT_TIMEOUT=5.0,
-    REDIS_MAX_CONNECTIONS=50,
-    REDIS_RETRY_ON_TIMEOUT=True,
-    REDIS_HEALTH_CHECK_INTERVAL=30,
-
-    # Memory storage
-    MEMORY_MAX_KEYS=100_000,             # max keys before LRU eviction
-    MEMORY_CLEANUP_INTERVAL=60,          # seconds between expired key cleanup
-)
-```
-
-### FingerprintSettings
-
-Controls how clients are identified. Higher levels are stricter but may cause issues with legitimate users behind proxies.
-
-```python
-from fastapi_420 import FingerprintSettings
-from fastapi_420.types import FingerprintLevel
-
-FingerprintSettings(
-    LEVEL=FingerprintLevel.NORMAL,       # RELAXED | NORMAL | STRICT
-
-    # What to trust
-    TRUST_X_FORWARDED_FOR=False,         # trust X-Forwarded-For header
-    TRUSTED_PROXIES=[],                  # IPs that can set forwarded headers
-
-    # IPv6 handling
-    IPV6_PREFIX_LENGTH=64,               # normalize IPv6 to /64 prefix
-)
-```
-
-**Fingerprint Levels:**
-
-| Level | What it uses |
-|-------|-------------|
-| RELAXED | IP only |
-| NORMAL | IP + User-Agent |
-| STRICT | IP + User-Agent + Accept headers + Auth token hash |
-
-### Algorithms
-
-| Algorithm | Behavior | Best for |
-|-----------|----------|----------|
-| SLIDING_WINDOW | Smooth, accurate limits | Most cases (default) |
-| TOKEN_BUCKET | Allows short bursts | APIs with bursty traffic |
-| FIXED_WINDOW | Simple, less accurate at window edges | High performance needs |
-
-## Rate Limit Format
-
-Rules follow the pattern `{requests}/{period}`:
-
-```
-100/minute
-50/hour
-1000/day
-10/second
-```
-
-Multiple rules stack. The most restrictive one applies:
-
-```python
-@limiter.limit("10/second", "100/minute", "1000/hour")
-async def endpoint(request: Request):
-    ...
-```
-
-## Running the Example
-
-```bash
-cd examples
-docker compose up -d
-pip install fastapi uvicorn
-python app.py
-```
-
-Then hit http://localhost:8000/docs to see the API.
-
-## Why 420?
-
-Twitter used HTTP 420 "Enhance Your Calm" for rate limiting before switching to 429. It is more fun.
-
-The exception is called `EnhanceYourCalm` and the response tells clients to chill out.
 
 ## License
 
-MIT
+AGPL 3.0

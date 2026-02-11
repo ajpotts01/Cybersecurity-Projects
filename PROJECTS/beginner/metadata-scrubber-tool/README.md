@@ -1,297 +1,63 @@
-# 🔒 Metadata Scrubber
+```ruby
+███╗   ███╗███████╗████████╗
+████╗ ████║██╔════╝╚══██╔══╝
+██╔████╔██║███████╗   ██║
+██║╚██╔╝██║╚════██║   ██║
+██║ ╚═╝ ██║███████║   ██║
+╚═╝     ╚═╝╚══════╝   ╚═╝
+```
 
-A privacy-focused CLI tool that removes sensitive metadata from files. Supports images, PDFs, and Microsoft Office documents. Perfect for protecting your privacy before sharing files online.
+[![Cybersecurity Projects](https://img.shields.io/badge/Cybersecurity--Projects-Project%20%239-red?style=flat&logo=github)](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/beginner/metadata-scrubber-tool)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3-purple.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![PyPI](https://img.shields.io/pypi/v/metadata-scrubber?color=3775A9&logo=pypi&logoColor=white)](https://pypi.org/project/metadata-scrubber/)
 
-[![Tests](https://github.com/Heritage-XioN/metadata-scrubber-tool/actions/workflows/test.yml/badge.svg)](https://github.com/Heritage-XioN/metadata-scrubber-tool/actions)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+> Privacy-focused CLI that strips sensitive metadata from images, PDFs, and Office documents.
 
-## ✨ Features
+*This is a quick overview — security theory, architecture, and full walkthroughs are in the [learn modules](#learn).*
 
-- **Multi-format support** - Images (JPEG, PNG), PDFs, and Office docs (Word, Excel, PowerPoint)
-- **Concurrent processing** - Process 1000+ files efficiently with ThreadPoolExecutor
-- **Dry-run mode** - Preview what would be scrubbed without making changes
-- **Verification reports** - Before/after comparison to confirm removal
-- **Smart format detection** - Uses library-level format detection, not just file extensions
-- **Beautiful CLI** - Rich progress bars and formatted output
-- **Privacy-first** - Removes GPS coordinates, author info, timestamps, camera data
+## What It Does
 
-## 📁 Supported Formats
+- Strip metadata from JPEG, PNG, PDF, Word, Excel, and PowerPoint files
+- Concurrent processing with ThreadPoolExecutor handles 1000+ files efficiently
+- Dry-run mode previews what would be removed before making changes
+- Verification reports show before/after comparison of metadata fields
+- Smart format detection uses file signatures, not extensions
+- Removes GPS coordinates, author info, timestamps, camera data, and software traces
 
-| Category | Extensions | Metadata Removed |
-|----------|------------|------------------|
-| **Images** | `.jpg`, `.jpeg`, `.png` | EXIF, GPS, camera info, timestamps |
-| **PDF** | `.pdf` | Author, creator, producer, dates |
-| **Word** | `.docx` | Author, title, comments, keywords |
-| **Excel** | `.xlsx`, `.xlsm`, `.xltx`, `.xltm` | Author, title, company, comments |
-| **PowerPoint** | `.pptx`, `.pptm`, `.potx`, `.potm` | Author, title, comments, keywords |
-
-## 🚀 Quick Start
-
-### Installation
+## Quick Start
 
 ```bash
-# Using uv (recommended)
-uv pip install metadata-scrubber
-
-# Or clone and install locally
-git clone https://github.com/Heritage-XioN/metadata-scrubber-tool.git
-cd metadata-scrubber-tool
-uv sync
+uv tool install metadata-scrubber
+mst scrub photo.jpg
 ```
 
-### Basic Usage
+> [!TIP]
+> This project uses [`just`](https://github.com/casey/just) as a command runner. Type `just` to see all available commands.
+>
+> Install: `curl -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin`
 
-```bash
-# Read metadata from a file
-mst read document.pdf
+## Commands
 
-# Scrub metadata and save to output folder
-mst scrub photo.jpg --output ./cleaned
+| Command | Description |
+|---------|-------------|
+| `mst read <file>` | Inspect metadata fields present in a file |
+| `mst scrub <file>` | Remove all metadata from a file |
+| `mst verify <file>` | Confirm metadata was successfully removed |
 
-# Batch process entire folder
-mst scrub ./documents -r -ext docx --output ./cleaned
+## Learn
 
-# Verify removal
-mst verify original.jpg ./cleaned/processed_original.jpg
-```
+This project includes step-by-step learning materials covering security theory, architecture, and implementation.
 
-## 📖 Commands
-
-### `mst read` - View Metadata
-
-Extract and display all embedded metadata from a file.
-
-```bash
-mst read photo.jpg                      # Single file
-mst read report.pdf                     # PDF file
-mst read ./docs -r -ext docx            # All Word docs recursively
-```
-
-**Example output:**
-```
-╭────────────────── Metadata Report ──────────────────╮
-│ ╭────────────────────┬────────────────────────────╮ │
-│ │ Property           │ Value                      │ │
-│ ├────────────────────┼────────────────────────────┤ │
-│ │ 📷 Camera          │                            │ │
-│ │   Make             │ Canon                      │ │
-│ │   Model            │ Canon EOS 80D              │ │
-│ │   Software         │ Adobe Photoshop            │ │
-│ ├────────────────────┼────────────────────────────┤ │
-│ │ 📍 GPS             │                            │ │
-│ │   GPSLatitude      │ 40.7128                    │ │
-│ │   GPSLongitude     │ -74.0060                   │ │
-│ ├────────────────────┼────────────────────────────┤ │
-│ │ 📅 Dates           │                            │ │
-│ │   DateTimeOriginal │ 2024:01:15 14:30:00        │ │
-│ │   created          │ 2024-01-15 14:30:00        │ │
-│ ╰────────────────────┴────────────────────────────╯ │
-╰─────────────────────────────────────────────────────╯
-```
-
----
-
-### `mst scrub` - Remove Metadata
-
-Remove sensitive metadata from files and save cleaned copies.
-
-```bash
-mst scrub photo.jpg --output ./out      # Single file
-mst scrub ./photos -r -ext jpg -o ./out # All JPEGs in directory
-mst scrub ./docs -r -ext pdf --dry-run  # Preview without changes
-mst scrub ./files -r -ext xlsx -w 8     # 8 concurrent workers
-```
-
-**Example output:**
-```
-Processing 42 files with 4 workers...
-
-⠸ Scrubbing metadata... ━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 42/42 0:00:12
-
-╭───────────────────── Summary ─────────────────────╮
-│ ✅ Processed: 42                                  │
-│ ❌ Failed:    0                                   │
-│ 📁 Output:    C:\Users\...\cleaned                │
-╰───────────────────────────────────────────────────╯
-```
-
-**Dry-run example:**
-```bash
-mst scrub ./photos -r -ext jpg --dry-run
-```
-```
-🔍 DRY-RUN MODE - No files will be modified
-
-Would process 15 files:
-  • photo1.jpg → processed_photo1.jpg
-  • photo2.jpg → processed_photo2.jpg
-  • vacation/beach.jpg → processed_beach.jpg
-  ...
-```
-
----
-
-### `mst verify` - Verify Metadata Removal
-
-Compare original and processed files to confirm sensitive data was removed.
-
-```bash
-mst verify original.jpg ./out/processed_original.jpg
-```
-
-**Example output:**
-```
-Comparing: test_canon.jpg → processed_test_canon.jpg
-
-                          Verification Report
-┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┓
-┃ Property                ┃ Before                   ┃ After          ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━┩
-│ Make                    │ Canon                    │ ✅ Removed     │
-│ Model                   │ Canon EOS 80D            │ ✅ Removed     │
-│ Software                │ Adobe Photoshop          │ ✅ Removed     │
-│ GPSLatitude             │ 40.7128                  │ ✅ Removed     │
-│ GPSLongitude            │ -74.0060                 │ ✅ Removed     │
-│ Artist                  │ John Smith               │ ✅ Removed     │
-│ Copyright               │ © 2024 John Smith        │ ✅ Removed     │
-│ DateTimeOriginal        │ 2024:01:15 14:30:00      │ ⚪ Preserved   │
-└─────────────────────────┴──────────────────────────┴────────────────┘
-
-✅ Status: CLEAN - All sensitive metadata removed
-Removed: 38 | Preserved: 2
-```
-
----
-
-## ⚙️ CLI Options
-
-| Option | Description |
-|--------|-------------|
-| `-r`, `--recursive` | Process directories recursively |
-| `-ext`, `--extension` | Filter by file extension (jpg, png, pdf, docx, xlsx, pptx) |
-| `-o`, `--output` | Output directory for cleaned files |
-| `-d`, `--dry-run` | Preview without making changes |
-| `-w`, `--workers` | Number of concurrent workers (default: 4, max: 16) |
-| `-V`, `--verbose` | Show detailed debug logs |
-| `-v`, `--version` | Show version |
-
----
-
-## 🛠️ Development
-
-### Setup
-
-```bash
-git clone https://github.com/Heritage-XioN/metadata-scrubber-tool.git
-cd metadata-scrubber-tool
-
-# Install with dev dependencies
-uv sync --all-extras
-
-# Run tests
-pytest
-
-# Run linting
-ruff check .
-
-# Run type checking
-mypy src
-```
-
-### Project Structure
-
-```
-src/
-├── main.py                   # CLI entry point (Typer app)
-├── commands/
-│   ├── read.py               # Read metadata command
-│   ├── scrub.py              # Scrub metadata command
-│   └── verify.py             # Verify removal command
-├── services/
-│   ├── metadata_factory.py   # Factory for creating handlers
-│   ├── metadata_handler.py   # Abstract base class
-│   ├── image_handler.py      # JPEG/PNG handler
-│   ├── pdf_handler.py        # PDF handler
-│   ├── excel_handler.py      # Excel handler
-│   ├── powerpoint_handler.py # PowerPoint handler
-│   ├── worddoc_handler.py    # Word document handler
-│   ├── report_generator.py   # Verification reports
-│   └── batch_processor.py    # Concurrent batch processing
-└── core/
-    ├── jpeg_metadata.py      # JPEG EXIF processor
-    └── png_metadata.py       # PNG metadata processor
-
-docs/
-├── metadata-risks.md         # Privacy risks documentation
-└── best-practices.md         # Secure file sharing guide
-```
-
----
-
-## 📚 Documentation
-
-- **[Metadata Risks](docs/metadata-risks.md)** - Why metadata matters for privacy
-- **[Best Practices](docs/best-practices.md)** - Guidelines for secure file sharing
+| Module | Topic |
+|--------|-------|
+| [00 - Overview](learn/00-OVERVIEW.md) | Prerequisites and quick start |
+| [01 - Concepts](learn/01-CONCEPTS.md) | Security theory and real-world breaches |
+| [02 - Architecture](learn/02-ARCHITECTURE.md) | System design and data flow |
+| [03 - Implementation](learn/03-IMPLEMENTATION.md) | Code walkthrough |
+| [04 - Challenges](learn/04-CHALLENGES.md) | Extension ideas and exercises |
 
 
----
+## License
 
-## ⚠️ Known Limitations
-
-### File Format Support
-
-| Category | Supported | Not Supported |
-|----------|-----------|---------------|
-| **Images** | JPEG, PNG | TIFF, GIF, HEIC, WebP, RAW |
-| **Documents** | `.docx` | Legacy `.doc` |
-| **Spreadsheets** | `.xlsx`, `.xlsm`, `.xltx`, `.xltm` | Legacy `.xls` |
-| **Presentations** | `.pptx`, `.pptm`, `.potx`, `.potm` | Legacy `.ppt` |
-| **PDF** | Standard PDFs | Encrypted/password-protected |
-
-### Known Constraints
-
-- **No in-place editing** - Always creates a processed copy (by design for safety)
-- **Password-protected files** - Cannot process encrypted documents
-- **PNG metadata** - Many PNGs have minimal/no extractable metadata
-- **Embedded files** - Objects embedded in Office documents are not deep-scanned
-- **PDF embedded images** - Images inside PDFs retain their original metadata
-- **Large files** - Files are loaded into memory; very large files may be slow
-
-### PNG Verification Behavior
-
-When a PNG file has no EXIF metadata (only PngInfo text chunks), the scrub operation removes all text keys. Attempting to verify or read the processed file will show:
-
-```
-Error during verification: No metadata found in the PNG image.
-```
-
-**This is expected behavior** - the error confirms that all metadata has been successfully removed. You can also use `mst read processed_file.png` to verify; the same error indicates a clean file.
-
-
-### Potential Enhancements
-
-- HEIC/HEIF support (common on iOS devices)
-- Legacy Office format support (`.doc`, `.xls`, `.ppt`)
-- Deep scanning of embedded objects
-- PDF embedded image metadata stripping
----
-
-## ⚠️ Security Considerations
-
-- **Original files are never modified** - processed copies are created
-- **Use `--dry-run`** to preview changes before committing
-- **Use `mst verify`** to confirm sensitive data was removed
-- **GPS coordinates** are completely stripped for privacy
-- **Author information** is removed from all supported formats
-- **Always backup files** before scrubbing in production
-
----
-
-## 📄 License
-
-MIT License - See [LICENSE](LICENSE) for details.
-
----
-
-Made with ❤️ for privacy
+AGPL 3.0

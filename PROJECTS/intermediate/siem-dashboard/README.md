@@ -1,102 +1,65 @@
-<!-- ©AngelaMos | 2026 — README.md -->
-
-# SIEM Dashboard
-
-A full-stack Security Information and Event Management dashboard with a built-in attack scenario simulation engine. Run realistic cyberattack playbooks, watch log events flow through a correlation engine in real time, and investigate generated alerts — all from the browser.
-
-**Live Demo:** [siem.carterperez-dev.com](https://siem.carterperez-dev.com)
-
----
-
-## Dashboard
-
-Real-time overview of ingested events, active alerts, severity distribution, and top source IPs.
-
-![Log Viewer](assets/images/log-viewer.png)
-
-## Log Viewer
-
-Paginated, filterable log table showing every event ingested by the system — firewall, auth, IDS, endpoint, DNS, and proxy logs. Click any row to inspect the full normalized payload.
-
-![Dashboard](assets/images/dashboard.png)
-## Alerts
-
-Alerts fire when correlation rules detect suspicious patterns in the event stream. Each alert shows the matched rule, severity, status, grouped source, and the specific events that triggered it. Analysts can acknowledge, investigate, resolve, or mark as false positive.
-
-![Alerts](assets/images/alerts.png)
-
-## Correlation Rules
-
-Define detection logic using three rule types:
-
-- **Threshold** — fire when N events from the same group occur within a time window
-- **Sequence** — fire when an ordered series of event patterns appears (e.g. failed logins followed by a success)
-- **Aggregation** — fire when distinct values of a field exceed a threshold (e.g. one IP hitting 10+ ports)
-
-![Rules](docs/assets/rules.png)
-
-## Scenario Engine
-
-Four YAML-based attack playbooks mapped to real MITRE ATT&CK techniques. Start a scenario, adjust playback speed, pause/resume — events flow through the full pipeline in real time.
-
-| Playbook | Techniques | Events |
-|----------|-----------|--------|
-| Brute Force with Lateral Movement | T1110.001, T1021.004 | 29 |
-| Data Exfiltration via DNS Tunneling | T1046, T1005, T1048.003, T1071.004 | 22 |
-| Phishing to C2 Beaconing | T1566.001, T1204.002, T1059.001, T1071.001, T1573.002 | 18 |
-| Privilege Escalation and Persistence | T1068, T1136.001, T1053.005, T1070.002 | 20 |
-
-![Scenarios](docs/images/scenarios.png)
-
-## How It Works
-
-```
-YAML Playbook ──→ Scenario Thread (replays events with timing)
-                        │
-                        ▼
-                  LogEvent.ingest()
-                        │
-            ┌───────────┴────────────┐
-            ▼                        ▼
-     MongoDB (logs)          Redis Stream (XADD)
-                                │
-                     ┌──────────┴──────────┐
-                     ▼                     ▼
-           Correlation Engine       SSE Generator
-           (XREADGROUP)              (XREAD)
-                │                      │
-          Rule.evaluate()              ▼
-                │               Frontend Live Feed
-                ▼
-          Alert.create()
-                │
-        ┌───────┴───────┐
-        ▼               ▼
-  MongoDB (alerts)   Alert SSE → Frontend
+```ruby
+███████╗██╗███████╗███╗   ███╗
+██╔════╝██║██╔════╝████╗ ████║
+███████╗██║█████╗  ██╔████╔██║
+╚════██║██║██╔══╝  ██║╚██╔╝██║
+███████║██║███████╗██║ ╚═╝ ██║
+╚══════╝╚═╝╚══════╝╚═╝     ╚═╝
 ```
 
-## Tech Stack
+[![Cybersecurity Projects](https://img.shields.io/badge/Cybersecurity--Projects-Project%20%2314-red?style=flat&logo=github)](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/intermediate/siem-dashboard)
+[![Python](https://img.shields.io/badge/Python-3.14+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react&logoColor=black)](https://react.dev)
+[![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3-purple.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Live Demo](https://img.shields.io/badge/Live-siem.carterperez--dev.com-green?style=flat&logo=googlechrome)](https://siem.carterperez-dev.com/)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker)](https://www.docker.com)
 
-| Layer | Stack |
-|-------|-------|
-| Backend | Flask, MongoEngine, Redis Streams, Pydantic, Argon2, JWT |
-| Frontend | React 19, TypeScript, Vite, TanStack Query, Zustand, visx, SCSS Modules |
-| Data | MongoDB 8, Redis 7 |
-| Infra | Docker Compose, Nginx, Gunicorn |
+> Full-stack SIEM dashboard with real-time log correlation and MITRE ATT&CK attack scenario simulation engine.
+
+*This is a quick overview — security theory, architecture, and full walkthroughs are in the [learn modules](#learn).*
+
+## What It Does
+
+- Real-time log ingestion and event correlation with three rule types (Threshold, Sequence, Aggregation)
+- Four YAML-based attack playbooks mapped to MITRE ATT&CK (brute force, DNS tunneling, phishing, privilege escalation)
+- Server-Sent Events for live alert feed with paginated, filterable log viewer
+- Alert lifecycle management (acknowledge, investigate, resolve, false positive)
+- Attack simulation engine that generates realistic multi-stage security events
+- Built with Just for task automation with full Docker Compose deployment
 
 ## Quick Start
 
 ```bash
-git clone https://github.com/CarterPerez-dev/Cybersecurity-Projects
-cd PROJECTS/intermediate/siem-dashboard
-Just dev-up
+docker compose up -d
 ```
 
-- **App:** http://localhost:8431
-- **API:** http://localhost:8431/api/v1
+Visit `http://localhost:8431` or the live demo at [siem.carterperez-dev.com](https://siem.carterperez-dev.com/)
 
-Register an account, create a correlation rule, start a scenario, and watch the data flow.
+> [!TIP]
+> This project uses [`just`](https://github.com/casey/just) as a command runner. Type `just` to see all available commands.
+>
+> Install: `curl -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin`
 
-## Learn More
+## Stack
 
-See the [`learn/`](learn/) folder for in-depth documentation on SIEM concepts, architecture decisions, implementation walkthroughs, and extension challenges.
+**Backend:** Flask, MongoEngine, Redis Streams, Pydantic, Argon2, JWT, Gunicorn
+
+**Frontend:** React 19, TypeScript, Vite, TanStack Query, Zustand, visx, SCSS Modules
+
+**Data:** MongoDB 8, Redis 7
+
+## Learn
+
+This project includes step-by-step learning materials covering security theory, architecture, and implementation.
+
+| Module | Topic |
+|--------|-------|
+| [00 - Overview](learn/00-OVERVIEW.md) | Prerequisites and quick start |
+| [01 - Concepts](learn/01-CONCEPTS.md) | Security theory and real-world breaches |
+| [02 - Architecture](learn/02-ARCHITECTURE.md) | System design and data flow |
+| [03 - Implementation](learn/03-IMPLEMENTATION.md) | Code walkthrough |
+| [04 - Challenges](learn/04-CHALLENGES.md) | Extension ideas and exercises |
+
+## License
+
+AGPL 3.0

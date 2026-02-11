@@ -1,205 +1,65 @@
-# docksec
+```ruby
+██████╗  ██████╗  ██████╗██╗  ██╗███████╗███████╗ ██████╗
+██╔══██╗██╔═══██╗██╔════╝██║ ██╔╝██╔════╝██╔════╝██╔════╝
+██║  ██║██║   ██║██║     █████╔╝ ███████╗█████╗  ██║
+██║  ██║██║   ██║██║     ██╔═██╗ ╚════██║██╔══╝  ██║
+██████╔╝╚██████╔╝╚██████╗██║  ██╗███████║███████╗╚██████╗
+╚═════╝  ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚══════╝ ╚═════╝
+```
 
-A command line tool that scans Docker environments for security misconfigurations. It checks running containers, images, Dockerfiles, and compose files against the CIS Docker Benchmark v1.6.0 and generates actionable reports.
+[![Cybersecurity Projects](https://img.shields.io/badge/Cybersecurity--Projects-Project%20%238-red?style=flat&logo=github)](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/intermediate/docker-security-audit)
+[![Go](https://img.shields.io/badge/Go-1.25+-00ADD8?style=flat&logo=go&logoColor=white)](https://go.dev)
+[![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3-purple.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Go Report Card](https://goreportcard.com/badge/github.com/CarterPerez-dev/docksec)](https://goreportcard.com/report/github.com/CarterPerez-dev/docksec)
+[![Docker](https://img.shields.io/badge/Docker-required-2496ED?style=flat&logo=docker)](https://www.docker.com)
+
+> Docker security audit CLI that checks containers, images, and Dockerfiles against CIS Docker Benchmark v1.6.0.
+
+*This is a quick overview — security theory, architecture, and full walkthroughs are in the [learn modules](#learn).*
 
 ## What It Does
 
-```
-docksec scans Docker environments for security misconfigurations,
-validates against CIS Docker Benchmark controls, and generates
-actionable remediation reports.
+- Scans running containers, images, Dockerfiles, and compose files for misconfigurations
+- Checks against CIS Docker Benchmark v1.6.0 with severity scoring
+- Detects privileged containers, dangerous capabilities, socket mounts, and namespace sharing
+- Outputs terminal (colored), JSON, SARIF (GitHub Security tab), and JUnit formats
+- Supports severity filtering and fail-on-critical for CI/CD pipelines
+- Validates AppArmor/seccomp profiles, resource limits, and user namespace remapping
 
-Usage:
-  docksec [command]
-
-Available Commands:
-  benchmark   CIS Docker Benchmark information
-  completion  Generate the autocompletion script for the specified shell
-  help        Help about any command
-  scan        Scan Docker environment for security issues
-  version     Print version information
-
-Flags:
-  -h, --help   help for docksec
-
-Use "docksec [command] --help" for more information about a command.
-```
-
-## Installation
-
-### Option 1: Build from source (if you cloned this repo)
-
-You need Go 1.21 or later installed.
-
-```bash
-go build -o docksec ./cmd/docksec
-./docksec scan
-```
-
-This builds a binary in the current directory. The `./` is required because the binary is not in your PATH.
-
-### Option 2: Go install (for Go developers) This same project lives in a seperate repo https://github.com/CarterPerez-dev/docksec - in order to be able to:
+## Quick Start
 
 ```bash
 go install github.com/CarterPerez-dev/docksec/cmd/docksec@latest
 docksec scan
 ```
 
-Because downloads the source, compiles it on your machine, and puts the binary in `~/go/bin/`. If that directory is in your PATH, you can run `docksec` directly without `./`.
+> [!TIP]
+> This project uses [`just`](https://github.com/casey/just) as a command runner. Type `just` to see all available commands.
+>
+> Install: `curl -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin`
 
-The `/cmd/docksec` path is needed because the main package lives in that subdirectory, not at the repo root.
-
-### Option 3: Docker (no installation needed)
-
-```bash
-docker run --rm -v /var/run/docker.sock:/var/run/docker.sock docksec scan
-```
-
-The `-v /var/run/docker.sock:/var/run/docker.sock` part gives the container access to your host's Docker daemon so it can inspect containers and images. Without this mount, it cannot see anything to scan.
-
-## Quick Start
-
-Scan everything (containers, images, daemon):
+## Commands
 
 ```bash
-docksec scan
+docksec scan                                    # scan all targets with colored output
+docksec scan --format sarif -o results.sarif    # export SARIF for GitHub Security tab
+docksec scan --severity critical,high           # filter by severity
+docksec scan --fail-on critical                 # exit non-zero for CI pipelines
 ```
 
-Scan only running containers:
+## Learn
 
-```bash
-docksec scan --targets containers
-```
+This project includes step-by-step learning materials covering security theory, architecture, and implementation.
 
-Scan a Dockerfile:
+| Module | Topic |
+|--------|-------|
+| [00 - Overview](learn/00-OVERVIEW.md) | Prerequisites and quick start |
+| [01 - Concepts](learn/01-CONCEPTS.md) | Security theory and real-world breaches |
+| [02 - Architecture](learn/02-ARCHITECTURE.md) | System design and data flow |
+| [03 - Implementation](learn/03-IMPLEMENTATION.md) | Code walkthrough |
+| [04 - Challenges](learn/04-CHALLENGES.md) | Extension ideas and exercises |
 
-```bash
-docksec scan --file ./Dockerfile
-```
-
-Scan a compose file:
-
-```bash
-docksec scan --file ./docker-compose.yml
-```
-
-Output as JSON:
-
-```bash
-docksec scan --output json
-```
-
-Output as SARIF (for GitHub Security tab integration):
-
-```bash
-docksec scan --output sarif --output-file results.sarif
-```
-
-Only show HIGH and CRITICAL findings:
-
-```bash
-docksec scan --severity high,critical
-```
-
-Exit with code 1 if any CRITICAL findings exist (useful for CI):
-
-```bash
-docksec scan --fail-on critical
-```
-
-## What Gets Checked
-
-The scanner looks for common security misconfigurations organized by CIS Docker Benchmark sections:
-
-**Container Runtime (Section 5)**
-- Privileged containers
-- Dangerous Linux capabilities (SYS_ADMIN, SYS_PTRACE, etc.)
-- Docker socket mounted inside container
-- Sensitive host paths mounted (/etc, /var, /proc, etc.)
-- Missing AppArmor or seccomp profiles
-- Host namespace sharing (network, PID, IPC, UTS)
-- Missing resource limits (memory, CPU, PIDs)
-- Writable root filesystem
-
-**Docker Daemon (Section 2)**
-- Insecure registries configured
-- Inter-container communication enabled
-- User namespace remapping disabled
-- Live restore disabled
-- Experimental features enabled
-
-**Dockerfiles (Section 4)**
-- Running as root (no USER instruction)
-- Using ADD instead of COPY
-- Secrets in environment variables or build args
-- Using latest tag
-- Missing HEALTHCHECK
-- Package manager cache not cleaned
-
-**Compose Files**
-- Privileged services
-- Dangerous capabilities
-- Host network mode
-- Sensitive volume mounts
-- Missing resource limits
-
-## Output Formats
-
-| Format | Use Case |
-|--------|----------|
-| terminal | Interactive use, colored output |
-| json | Parsing with jq, integration with other tools |
-| sarif | GitHub Security tab, VS Code SARIF viewer |
-| junit | CI/CD test reporting (Jenkins, GitLab CI) |
-
-## How It Works (High Level)
-
-1. **Connect to Docker** using the official Docker SDK. The scanner uses the same socket that `docker` CLI uses (`/var/run/docker.sock`).
-
-2. **Run analyzers** in parallel. Each analyzer focuses on one target type:
-   - ContainerAnalyzer inspects running containers
-   - ImageAnalyzer checks image configurations and history
-   - DaemonAnalyzer queries daemon settings
-   - DockerfileAnalyzer parses Dockerfile instructions
-   - ComposeAnalyzer parses docker-compose.yml files
-
-3. **Match against rules**. Each check maps to a CIS control with severity, description, and remediation guidance.
-
-4. **Aggregate findings** and filter by severity if requested.
-
-5. **Generate report** in the chosen format.
-
-## Project Structure
-
-```
-cmd/docksec/          CLI entry point, command definitions
-internal/
-  analyzer/           Security analyzers for each target type
-  benchmark/          CIS Docker Benchmark control definitions
-  config/             Runtime configuration
-  docker/             Docker SDK wrapper
-  finding/            Finding types and severity levels
-  parser/             Dockerfile and compose file parsers
-  proc/               Linux /proc filesystem inspection
-  reporter/           Output formatters (JSON, SARIF, JUnit, terminal)
-  rules/              Security rules (capabilities, paths, secrets)
-  scanner/            Orchestrates analyzers with worker pool
-```
-
-## Learning
-
-The `learn/` directory contains documentation explaining how the codebase works. Start with:
-
-- `learn/architecture.md` for the overall design
-- `learn/security-concepts.md` for Docker security fundamentals
-- `learn/codebase-guide.md` for a tour of the code
-
-## Requirements
-
-- Go 1.21+ (for building)
-- Docker (for scanning)
-- Linux (for /proc filesystem inspection of container processes)
 
 ## License
 
-MIT
+AGPL 3.0
