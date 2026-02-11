@@ -58,7 +58,10 @@ from fastapi_420.exceptions import (
     StorageError,
 )
 from fastapi_420.limiter import RateLimiter
-from fastapi_420.middleware import RateLimitMiddleware, SlowDownMiddleware
+from fastapi_420.middleware import (
+    RateLimitMiddleware,
+    SlowDownMiddleware,
+)
 from fastapi_420.types import (
     Algorithm,
     DefenseMode,
