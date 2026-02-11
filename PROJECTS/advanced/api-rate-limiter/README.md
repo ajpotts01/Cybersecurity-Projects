@@ -10,7 +10,7 @@
 [![Cybersecurity Projects](https://img.shields.io/badge/Cybersecurity--Projects-Project%20%235-red?style=flat&logo=github)](https://github.com/CarterPerez-dev/Cybersecurity-Projects/tree/main/PROJECTS/advanced/api-rate-limiter)
 [![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
 [![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3-purple.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![PyPI](https://img.shields.io/pypi/v/fastapi-420?color=3775A9&logo=pypi&logoColor=white)](https://pypi.org/project/fastapi-420/)
+[![PyPI](https://img.shields.io/pypi/v/fastapi-420?color=3775A9&logo=pypi&logoColor=white)](https://pypi.org/project/fastapi-420)
 [![FastAPI](https://img.shields.io/badge/FastAPI-compatible-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 
 > Production rate limiting for FastAPI using HTTP 420 "Enhance Your Calm".
