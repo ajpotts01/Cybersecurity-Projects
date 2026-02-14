@@ -70,3 +70,8 @@ This project includes step-by-step learning materials covering security theory, 
 ## License
 
 AGPL 3.0
+
+<img width="1827" height="853" alt="Screenshot_20260214_022250" src="https://github.com/user-attachments/assets/9f26428f-53cc-49be-84cc-346357e8ef00" />
+
+<img width="1103" height="828" alt="Screenshot_20260214_022135" src="https://github.com/user-attachments/assets/27876356-ec9d-4a0f-af71-92c3c7714232" />
+
